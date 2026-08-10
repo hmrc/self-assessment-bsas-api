@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import api.models.domain.{BusinessId, Nino, TaxYear}
 import api.models.errors.{DownstreamErrorCode, DownstreamErrors}
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
+import play.api.Configuration
 import uk.gov.hmrc.http.StringContextOps
 import v7.bsas.list.def2.model.Def2_ListBsasFixtures
 import v7.bsas.list.def2.model.request.Def2_ListBsasRequestData
@@ -30,26 +31,21 @@ import v7.bsas.list.model.response.ListBsasResponse
 import scala.concurrent.Future
 
 class ListBsasConnectorSpec extends ConnectorSpec {
-
-  private val nino             = Nino("AA123456A")
-  private val incomeSourceId   = "XAIS12345678910"
-  private val incomeSourceType = "02"
-
-  private val preTysTaxYear = TaxYear.fromMtd("2018-19")
-  private val tysTaxYear    = TaxYear.fromMtd("2023-24")
-
-  private val additionalQueryParams: Seq[(String, String)] = List(
-    ("taxYear", preTysTaxYear.asDownstream)
-  )
+  private val nino                                         = Nino("AA123456A")
+  private val incomeSourceId                               = "XAIS12345678910"
+  private val incomeSourceType                             = "02"
+  private val preTysTaxYear                                = TaxYear.fromMtd("2018-19")
+  private val tysTaxYear                                   = TaxYear.fromMtd("2023-24")
+  private val additionalQueryParams: Seq[(String, String)] = List(("taxYear", preTysTaxYear.asDownstream))
 
   private val commonQueryParams: Seq[(String, String)] = List(
     ("incomeSourceId", incomeSourceId),
     ("incomeSourceType", incomeSourceType)
   )
 
-  "listBsas" should {
+  "ListBsasConnector" should {
     "return a valid response" when {
-      "a valid request is supplied" in new IfsTest with Test with Def2_ListBsasFixtures {
+      "a valid preTYS request is supplied" in new IfsTest with Test with Def2_ListBsasFixtures {
         def taxYear: TaxYear                             = preTysTaxYear
         def downstreamQueryParams: Seq[(String, String)] = commonQueryParams ++ additionalQueryParams
 
@@ -58,43 +54,72 @@ class ListBsasConnectorSpec extends ConnectorSpec {
 
         await(connector.listBsas(request)) shouldBe outcome
       }
+
+      "a valid request with TYS 2023-24 tax year is supplied and hip migration feature switch is disabled" in new IfsTest
+        with Test
+        with Def2_ListBsasFixtures {
+        def taxYear: TaxYear                             = tysTaxYear
+        def downstreamQueryParams: Seq[(String, String)] = commonQueryParams
+
+        MockedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1898.enabled" -> false))
+        val outcome: Right[Nothing, ResponseWrapper[ListBsasResponse]] = Right(ResponseWrapper(correlationId, listBsasResponse))
+        stubTysHttpResponse(outcome)
+
+        await(connector.listBsas(request)) shouldBe outcome
+      }
+
+      "a valid request with TYS 2023-24 tax year is supplied and hip migration feature switch is enabled" in new HipTest
+        with Test
+        with Def2_ListBsasFixtures {
+        def taxYear: TaxYear                             = tysTaxYear
+        def downstreamQueryParams: Seq[(String, String)] = commonQueryParams
+
+        MockedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1898.enabled" -> true))
+        val outcome: Right[Nothing, ResponseWrapper[ListBsasResponse]] = Right(ResponseWrapper(correlationId, listBsasResponse))
+        stubHipTysHttpResponse(outcome)
+
+        await(connector.listBsas(request)) shouldBe outcome
+      }
     }
   }
 
-  "a valid request with Tax Year Specific tax year is supplied" in new IfsTest with Test with Def2_ListBsasFixtures {
-    def taxYear: TaxYear                                           = tysTaxYear
-    def downstreamQueryParams: Seq[(String, String)]               = commonQueryParams
-    val outcome: Right[Nothing, ResponseWrapper[ListBsasResponse]] = Right(ResponseWrapper(correlationId, listBsasResponse))
-
-    stubTysHttpResponse(outcome)
-
-    await(connector.listBsas(request)) shouldBe outcome
-  }
-
   "response is an error" must {
-    val downstreamErrorResponse: DownstreamErrors =
-      DownstreamErrors.single(DownstreamErrorCode("SOME_ERROR"))
-    val outcome = Left(ResponseWrapper(correlationId, downstreamErrorResponse))
+    val downstreamErrorResponse: DownstreamErrors                 = DownstreamErrors.single(DownstreamErrorCode("SOME_ERROR"))
+    val outcome: Left[ResponseWrapper[DownstreamErrors], Nothing] = Left(ResponseWrapper(correlationId, downstreamErrorResponse))
 
-    "return the error" in new IfsTest with Test with Def2_ListBsasFixtures {
+    "return the error given a preTYS tax year" in new IfsTest with Test with Def2_ListBsasFixtures {
       def taxYear: TaxYear                             = preTysTaxYear
       def downstreamQueryParams: Seq[(String, String)] = commonQueryParams ++ additionalQueryParams
 
       stubHttpResponse(outcome)
+      val result: DownstreamOutcome[ListBsasResponse] = await(connector.listBsas(request))
 
-      val result: DownstreamOutcome[ListBsasResponse] =
-        await(connector.listBsas(request))
       result shouldBe outcome
     }
 
-    "return the error given a TYS tax year request" in new IfsTest with Test with Def2_ListBsasFixtures {
+    "return the error given a TYS 2023-24 tax year request and hip migration feature switch is disabled" in new IfsTest
+      with Test
+      with Def2_ListBsasFixtures {
       def taxYear: TaxYear                             = tysTaxYear
       def downstreamQueryParams: Seq[(String, String)] = commonQueryParams
 
+      MockedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1898.enabled" -> false))
       stubTysHttpResponse(outcome)
+      val result: DownstreamOutcome[ListBsasResponse] = await(connector.listBsas(request))
 
-      val result: DownstreamOutcome[ListBsasResponse] =
-        await(connector.listBsas(request))
+      result shouldBe outcome
+    }
+
+    "return the error given a TYS 2023-24 tax year request and hip migration feature switch is enabled" in new HipTest
+      with Test
+      with Def2_ListBsasFixtures {
+      def taxYear: TaxYear                             = tysTaxYear
+      def downstreamQueryParams: Seq[(String, String)] = commonQueryParams
+
+      MockedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1898.enabled" -> true))
+      stubHipTysHttpResponse(outcome)
+      val result: DownstreamOutcome[ListBsasResponse] = await(connector.listBsas(request))
+
       result shouldBe outcome
     }
   }
@@ -103,11 +128,8 @@ class ListBsasConnectorSpec extends ConnectorSpec {
     protected def taxYear: TaxYear
     protected def downstreamQueryParams: Seq[(String, String)]
 
-    protected val request: ListBsasRequestData =
-      Def2_ListBsasRequestData(nino, taxYear, Some(BusinessId(incomeSourceId)), Some(incomeSourceType))
-
-    protected val connector: ListBsasConnector =
-      new ListBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
+    protected val request: ListBsasRequestData = Def2_ListBsasRequestData(nino, taxYear, Some(BusinessId(incomeSourceId)), Some(incomeSourceType))
+    protected val connector: ListBsasConnector = new ListBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     protected def stubHttpResponse(
         outcome: DownstreamOutcome[ListBsasResponse]
@@ -123,6 +145,15 @@ class ListBsasConnectorSpec extends ConnectorSpec {
     ): CallHandler[Future[DownstreamOutcome[ListBsasResponse]]]#Derived = {
       willGet(
         url = url"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino",
+        parameters = downstreamQueryParams
+      ).returns(Future.successful(outcome))
+    }
+
+    protected def stubHipTysHttpResponse(
+        outcome: DownstreamOutcome[ListBsasResponse]
+    ): CallHandler[Future[DownstreamOutcome[ListBsasResponse]]]#Derived = {
+      willGet(
+        url = url"$baseUrl/itsa/income-tax/v1/${taxYear.asTysDownstream}/adjustable-summary-calculation/$nino",
         parameters = downstreamQueryParams
       ).returns(Future.successful(outcome))
     }

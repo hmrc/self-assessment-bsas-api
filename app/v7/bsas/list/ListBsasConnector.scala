@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
 package v7.bsas.list
 
 import api.config.AppConfig
-import api.connectors.DownstreamUri.IfsUri
+import api.config.ConfigFeatureSwitches
+import api.connectors.DownstreamUri.{HipUri, IfsUri}
 import api.connectors.httpparsers.StandardDownstreamHttpParser.*
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -39,23 +40,22 @@ class ListBsasConnector @Inject() (val http: HttpClientV2, val appConfig: AppCon
     import request.*
     import schema.*
 
-    val queryParams = Map(
+    val queryParams = Seq(
       "incomeSourceId"   -> incomeSourceId.map(_.businessId),
       "incomeSourceType" -> incomeSourceType
-    )
+    ).collect { case (k, Some(v)) => (k, v) }
 
-    val mappedQueryParams: Map[String, String] = queryParams.collect { case (k: String, Some(v: String)) => (k, v) }
+    val preTysQueryParams = queryParams :+ ("taxYear" -> taxYear.asDownstream)
 
-    if (taxYear.useTaxYearSpecificApi) {
-      get(
-        IfsUri[DownstreamResp](s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino"),
-        mappedQueryParams.toList
-      )
-    } else {
-      val mappedQueryParamsWithTaxYear: Map[String, String] = mappedQueryParams ++ Map("taxYear" -> taxYear.asDownstream)
-      get(IfsUri[DownstreamResp](s"income-tax/adjustable-summary-calculation/$nino"), mappedQueryParamsWithTaxYear.toSeq)
-    }
+    lazy val downstreamUri1517 = IfsUri[DownstreamResp](s"income-tax/adjustable-summary-calculation/$nino")
+    lazy val downstreamUri1898 =
+      if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1898")) {
+        HipUri[DownstreamResp](s"itsa/income-tax/v1/${taxYear.asTysDownstream}/adjustable-summary-calculation/$nino")
+      } else {
+        IfsUri[DownstreamResp](s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino")
+      }
 
+    if (taxYear.useTaxYearSpecificApi) get(downstreamUri1898, queryParams) else get(downstreamUri1517, preTysQueryParams)
   }
 
 }

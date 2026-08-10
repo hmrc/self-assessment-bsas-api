@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v7.bsas.list.def2
+package v7.bsas.list.def1
 
 import api.models.errors.*
 import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
@@ -26,14 +26,14 @@ import play.api.http.Status.*
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import v7.bsas.list.def2.model.Def2_ListBsasFixtures
+import v7.bsas.list.def1.model.Def1_ListBsasFixtures
 
-class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures {
+class Def1_ListBsasIfsIspec extends IntegrationBaseSpec with Def1_ListBsasFixtures {
+  override def servicesConfig: Map[String, Any] = Map("feature-switch.ifs_hip_migration_1898.enabled" -> false) ++ super.servicesConfig
 
   "Calling the list Bsas endpoint" should {
     "return a valid response with status OK" when {
-
-      "valid request is made" in new Test {
+      "valid request is made" in new NonTysTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -46,10 +46,27 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesJs
+        response.json shouldBe summariesJson
+
       }
 
-      "valid request is made with foreign property" in new Test {
+      "valid request is made with a Tax Year Specific (TYS) tax year" in new TysIfsTest {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasDownstreamJsonMultiple)
+        }
+
+        val response: WSResponse = await(request.get())
+
+        response.status shouldBe OK
+        response.header("Content-Type") shouldBe Some("application/json")
+        response.json shouldBe summariesJson
+      }
+
+      "valid request is made with foreign property" in new NonTysTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -62,8 +79,25 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesForeignJs
+        response.json shouldBe summariesForeignJson
       }
+
+      "valid request is made with foreign property and a Tax Year Specific (TYS) tax year" in new TysIfsTest {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasResponseDownstreamJsonForeign)
+        }
+
+        val response: WSResponse = await(request.get())
+
+        response.status shouldBe OK
+        response.header("Content-Type") shouldBe Some("application/json")
+        response.json shouldBe summariesForeignJson
+      }
+
     }
 
     "return error according to spec" when {
@@ -74,7 +108,7 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
                               requestBusinessId: Option[String],
                               expectedStatus: Int,
                               expectedBody: MtdError): Unit = {
-        s"validation fails with ${expectedBody.code} error" in new Test {
+        s"validation fails with ${expectedBody.code} error" in new NonTysTest {
 
           override val nino: String                   = requestNino
           override val taxYear: String                = requestTaxYear
@@ -95,12 +129,12 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
       }
 
       val input = List(
-        ("AA1123A", "2025-26", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, NinoFormatError),
+        ("AA1123A", "2019-20", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, NinoFormatError),
         ("AA123456A", "20177", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, TaxYearFormatError),
         ("AA123456A", "2018-19", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, RuleTaxYearNotSupportedError),
-        ("AA123456A", "2025-26", Some("self-employment"), Some("X0IS00"), BAD_REQUEST, BusinessIdFormatError),
-        ("AA123456A", "2025-27", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, RuleTaxYearRangeInvalidError),
-        ("AA123456A", "2025-26", Some("uk-property-fhl"), Some("X0IS00000000210"), BAD_REQUEST, TypeOfBusinessFormatError)
+        ("AA123456A", "2019-20", Some("self-employment"), Some("X0IS00"), BAD_REQUEST, BusinessIdFormatError),
+        ("AA123456A", "2019-20", Some("self-employments-or-not"), Some("X0IS00000000210"), BAD_REQUEST, TypeOfBusinessFormatError),
+        ("AA123456A", "2019-21", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, RuleTaxYearRangeInvalidError)
       )
       input.foreach(validationErrorTest.tupled)
     }
@@ -108,7 +142,7 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
     "downstream service error" when {
 
       def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-        s"downstream returns an $downstreamCode error and status $downstreamStatus" in new Test {
+        s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
@@ -149,19 +183,22 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
   }
 
   private trait Test {
-    // common
     val nino                           = "AA123456B"
     val typeOfBusiness: Option[String] = Some("self-employment")
     val businessId: Option[String]     = Some("XAIS12345678910")
 
-    def taxYear: String = "2025-26"
-
+    def taxYear: String
+    def downstreamUri: String
     def setupStubs(): StubMapping
+    private def mtdUri: String = s"/$nino/$taxYear"
 
-    // downstream
-    private def downstreamTaxYear: String = "25-26"
+    private def mtdQueryParams: Seq[(String, String)] = {
+      val requiredParams = List("taxYear" -> taxYear)
+      val optionalParams = List("typeOfBusiness" -> typeOfBusiness, "businessId" -> businessId)
+        .collect { case (k, Some(v)) => (k, v) }
 
-    def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$downstreamTaxYear/$nino"
+      requiredParams ++ optionalParams
+    }
 
     def request: WSRequest = {
       setupStubs()
@@ -173,23 +210,24 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
         )
     }
 
-    private def mtdUri: String = s"/$nino/$taxYear"
-
-    private def mtdQueryParams: Seq[(String, String)] = {
-      val requiredParams = List("taxYear" -> taxYear)
-      val optionalParams = List("typeOfBusiness" -> typeOfBusiness, "businessId" -> businessId)
-        .collect { case (k, Some(v)) =>
-          (k, v)
-        }
-      requiredParams ++ optionalParams
-    }
-
     def errorBody(code: String): String =
-      s"""{
-         |  "code": "$code",
-         |  "reason": "error message"
-         |}""".stripMargin
+      s"""
+        |{
+        |  "code": "$code",
+        |  "reason": "error message"
+        |}
+      """.stripMargin
 
+  }
+
+  private trait NonTysTest extends Test {
+    def taxYear: String                = "2019-20"
+    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino"
+  }
+
+  private trait TysIfsTest extends Test {
+    def taxYear: String                = "2023-24"
+    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino"
   }
 
 }
