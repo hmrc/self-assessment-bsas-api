@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -266,7 +266,7 @@ trait Def1_ListBsasFixtures {
     summaries = List(bsasSummary)
   )
 
-  val summariesJs: JsValue =
+  val summariesJson: JsValue =
     Json.parse(
       s"""
          |{
@@ -327,7 +327,7 @@ trait Def1_ListBsasFixtures {
     """.stripMargin
     )
 
-  val summariesForeignJs: JsValue =
+  val summariesForeignJson: JsValue =
     Json.parse(
       s"""
          |{

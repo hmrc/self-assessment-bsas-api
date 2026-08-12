@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,10 +83,11 @@ class ListBsasServiceSpec extends ServiceSpec {
         ("INVALID_CORRELATION_ID", InternalError),
         ("INVALID_TAX_YEAR", TaxYearFormatError),
         ("INVALID_INCOMESOURCE_ID", BusinessIdFormatError),
+        ("INVALID_INCOME_SOURCE_ID", BusinessIdFormatError),
+        ("INVALID_INCOME_SOURCE_TYPE", InternalError),
         ("NOT_FOUND", NotFoundError),
         ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
       )
-
       (errors ++ extraTysErrors).foreach(args => serviceError.tupled(args))
     }
   }

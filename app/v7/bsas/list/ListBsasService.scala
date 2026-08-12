@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,11 +54,13 @@ class ListBsasService @Inject() (connector: ListBsasConnector) extends BaseServi
     )
 
     val extraTysErrors = Map(
-      "INVALID_CORRELATION_ID"  -> InternalError,
-      "INVALID_TAX_YEAR"        -> TaxYearFormatError,
-      "INVALID_INCOMESOURCE_ID" -> BusinessIdFormatError,
-      "NOT_FOUND"               -> NotFoundError,
-      "TAX_YEAR_NOT_SUPPORTED"  -> RuleTaxYearNotSupportedError
+      "INVALID_CORRELATION_ID"     -> InternalError,
+      "INVALID_TAX_YEAR"           -> TaxYearFormatError,
+      "INVALID_INCOMESOURCE_ID"    -> BusinessIdFormatError,
+      "INVALID_INCOME_SOURCE_ID"   -> BusinessIdFormatError,
+      "INVALID_INCOME_SOURCE_TYPE" -> InternalError,
+      "NOT_FOUND"                  -> NotFoundError,
+      "TAX_YEAR_NOT_SUPPORTED"     -> RuleTaxYearNotSupportedError
     )
 
     errors ++ extraTysErrors
