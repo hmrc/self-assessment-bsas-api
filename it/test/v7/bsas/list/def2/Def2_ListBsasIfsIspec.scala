@@ -161,11 +161,12 @@ class Def2_ListBsasIfsIspec extends IntegrationBaseSpec with Def2_ListBsasFixtur
     private def mtdUri: String = s"/$nino/$taxYear"
 
     private def mtdQueryParams: Seq[(String, String)] = {
-      val requiredParams = List("taxYear" -> taxYear)
-      val optionalParams = List("typeOfBusiness" -> typeOfBusiness, "businessId" -> businessId)
-        .collect { case (k, Some(v)) => (k, v) }
+      val optionalParams = List(
+        "typeOfBusiness" -> typeOfBusiness,
+        "businessId"     -> businessId
+      ).collect { case (k, Some(v)) => (k, v) }
 
-      requiredParams ++ optionalParams
+      optionalParams
     }
 
     def request: WSRequest = {

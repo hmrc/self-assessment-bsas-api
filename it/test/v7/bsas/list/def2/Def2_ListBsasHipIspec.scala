@@ -129,7 +129,7 @@ class Def2_ListBsasHipIspec extends IntegrationBaseSpec with Def2_ListBsasFixtur
         (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
         (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, InternalError),
         (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
-        (BAD_REQUEST, "INVALID_INCOMESOURCE_ID", BAD_REQUEST, BusinessIdFormatError),
+        (BAD_REQUEST, "INVALID_INCOME_SOURCE_ID", BAD_REQUEST, BusinessIdFormatError),
         (BAD_REQUEST, "INVALID_INCOME_SOURCE_TYPE", INTERNAL_SERVER_ERROR, InternalError),
         (BAD_REQUEST, "NOT_FOUND", NOT_FOUND, NotFoundError),
         (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError),
@@ -149,15 +149,17 @@ class Def2_ListBsasHipIspec extends IntegrationBaseSpec with Def2_ListBsasFixtur
 
     def taxYear: String = "2025-26"
     def setupStubs(): StubMapping
-    def downstreamUri: String  = s"/itsa/income-tax/v1/25-26/adjustable-summary-calculation/$nino"
+    def downstreamUri: String = s"/itsa/income-tax/v1/25-26/adjustable-summary-calculation/$nino"
+
     private def mtdUri: String = s"/$nino/$taxYear"
 
     private def mtdQueryParams: Seq[(String, String)] = {
-      val requiredParams = List("taxYear" -> taxYear)
-      val optionalParams = List("typeOfBusiness" -> typeOfBusiness, "businessId" -> businessId)
-        .collect { case (k, Some(v)) => (k, v) }
+      val optionalParams = List(
+        "typeOfBusiness" -> typeOfBusiness,
+        "businessId"     -> businessId
+      ).collect { case (k, Some(v)) => (k, v) }
 
-      requiredParams ++ optionalParams
+      optionalParams
     }
 
     def request: WSRequest = {

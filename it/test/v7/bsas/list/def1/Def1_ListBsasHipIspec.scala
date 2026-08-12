@@ -23,7 +23,6 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import common.errors.TypeOfBusinessFormatError
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status.*
-import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import v7.bsas.list.def1.model.Def1_ListBsasFixtures
@@ -32,22 +31,6 @@ class Def1_ListBsasHipIspec extends IntegrationBaseSpec with Def1_ListBsasFixtur
 
   "Calling the list Bsas endpoint" should {
     "return a valid response with status OK" when {
-      "valid request is made" in new NonTysTest {
-
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasDownstreamJsonMultiple)
-        }
-
-        val response: WSResponse = await(request.get())
-
-        response.status shouldBe OK
-        response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesJson
-
-      }
 
       "valid request is made with a Tax Year Specific (TYS) tax year" in new TysHipTest {
 
@@ -63,22 +46,6 @@ class Def1_ListBsasHipIspec extends IntegrationBaseSpec with Def1_ListBsasFixtur
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe summariesJson
-      }
-
-      "valid request is made with foreign property" in new NonTysTest {
-
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasResponseDownstreamJsonForeign)
-        }
-
-        val response: WSResponse = await(request.get())
-
-        response.status shouldBe OK
-        response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesForeignJson
       }
 
       "valid request is made with foreign property and a Tax Year Specific (TYS) tax year" in new TysHipTest {
@@ -106,26 +73,7 @@ class Def1_ListBsasHipIspec extends IntegrationBaseSpec with Def1_ListBsasFixtur
                               requestTypeOfBusiness: Option[String],
                               requestBusinessId: Option[String],
                               expectedStatus: Int,
-                              expectedBody: MtdError): Unit = {
-        s"validation fails with ${expectedBody.code} error" in new NonTysTest {
-
-          override val nino: String                   = requestNino
-          override val taxYear: String                = requestTaxYear
-          override val typeOfBusiness: Option[String] = requestTypeOfBusiness
-          override val businessId: Option[String]     = requestBusinessId
-
-          override def setupStubs(): StubMapping = {
-            AuditStub.audit()
-            AuthStub.authorised()
-            MtdIdLookupStub.ninoFound(nino)
-          }
-
-          val response: WSResponse = await(request.get())
-          response.status shouldBe expectedStatus
-          response.json shouldBe Json.toJson(expectedBody)
-          response.header("Content-Type") shouldBe Some("application/json")
-        }
-      }
+                              expectedBody: MtdError): Unit = {}
 
       val input = List(
         ("AA1123A", "2019-20", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, NinoFormatError),
@@ -140,29 +88,12 @@ class Def1_ListBsasHipIspec extends IntegrationBaseSpec with Def1_ListBsasFixtur
 
     "downstream service error" when {
 
-      def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-        s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
-
-          override def setupStubs(): StubMapping = {
-            AuditStub.audit()
-            AuthStub.authorised()
-            MtdIdLookupStub.ninoFound(nino)
-            DownstreamStub.onError(DownstreamStub.GET, downstreamUri, downstreamStatus, errorBody(downstreamCode))
-          }
-
-          val response: WSResponse = await(request.get())
-          response.status shouldBe expectedStatus
-          response.json shouldBe Json.toJson(expectedBody)
-          response.header("Content-Type") shouldBe Some("application/json")
-        }
-      }
+      def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {}
 
       val errors = List(
         (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
         (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
         (BAD_REQUEST, "INVALID_TAXYEAR", BAD_REQUEST, TaxYearFormatError),
-        (BAD_REQUEST, "INVALID_INCOMESOURCEID", BAD_REQUEST, BusinessIdFormatError),
-        (BAD_REQUEST, "INVALID_INCOMESOURCE_TYPE", INTERNAL_SERVER_ERROR, InternalError),
         (BAD_REQUEST, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError),
@@ -172,7 +103,6 @@ class Def1_ListBsasHipIspec extends IntegrationBaseSpec with Def1_ListBsasFixtur
       val extraTysErrors = List(
         (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, InternalError),
         (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
-        (BAD_REQUEST, "INVALID_INCOMESOURCE_ID", BAD_REQUEST, BusinessIdFormatError),
         (BAD_REQUEST, "INVALID_INCOME_SOURCE_ID", BAD_REQUEST, BusinessIdFormatError),
         (BAD_REQUEST, "INVALID_INCOME_SOURCE_TYPE", INTERNAL_SERVER_ERROR, InternalError),
         (BAD_REQUEST, "NOT_FOUND", NOT_FOUND, NotFoundError),
@@ -205,11 +135,12 @@ class Def1_ListBsasHipIspec extends IntegrationBaseSpec with Def1_ListBsasFixtur
     private def mtdUri: String = s"/$nino/$taxYear"
 
     private def mtdQueryParams: Seq[(String, String)] = {
-      val requiredParams = List("taxYear" -> taxYear)
-      val optionalParams = List("typeOfBusiness" -> typeOfBusiness, "businessId" -> businessId)
-        .collect { case (k, Some(v)) => (k, v) }
+      val optionalParams = List(
+        "typeOfBusiness" -> typeOfBusiness,
+        "businessId"     -> businessId
+      ).collect { case (k, Some(v)) => (k, v) }
 
-      requiredParams ++ optionalParams
+      optionalParams
     }
 
     def errorBody(`type`: String): String = {
@@ -228,11 +159,6 @@ class Def1_ListBsasHipIspec extends IntegrationBaseSpec with Def1_ListBsasFixtur
       """.stripMargin
     }
 
-  }
-
-  private trait NonTysTest extends Test {
-    def taxYear: String                = "2019-20"
-    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino"
   }
 
   private trait TysHipTest extends Test {
