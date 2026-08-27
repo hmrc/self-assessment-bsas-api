@@ -41,7 +41,7 @@
               },
               "endDate": {
                 "type": "string",
-                "description": "The date the accounting period finished. The accounting period must end in the tax year to which it is assigned, therefore this must be the 5th April. For MTD submissions 2019-20 is the earliest tax year in which an accounting period can end.",
+                "description": "The date the accounting period finished. This must be the 5th April. For MTD submissions 2019-20 is the earliest tax year in which an accounting period can end.",
                 "pattern": "^2[0-9]{3}-[0-9]{2}-[0-9]{2}$",
                 "example": "2019-04-05"
               }
