@@ -81,16 +81,16 @@
           "example": "My uk property business"
         },
         "accountingPeriodStartDate": {
-          "description": "The date the accounting period started. Date in the format YYYY-MM-DD. \n\nNote: <b>Accounting period start and end dates should not be displayed to users of your software.</b>",
+          "description": "The date the accounting period started. Date in the format YYYY-MM-DD. This must be 6th April. \n\nNote: <b>Accounting period start and end dates should not be displayed to users of your software.</b>",
           "format": "date",
           "type": "string",
-          "example": "2021-22"
+          "example": "2021-04-06"
         },
         "accountingPeriodEndDate": {
-          "description": "The date the accounting period ended. Date in the format YYYY-MM-DD. \n\nNote: <b>Accounting period start and end dates should not be displayed to users of your software.</b>",
+          "description": "The date the accounting period ended. Date in the format YYYY-MM-DD. This must be 5th April. \n\nNote: <b>Accounting period start and end dates should not be displayed to users of your software.</b>",
           "format": "date",
           "type": "string",
-          "example": "2022-23"
+          "example": "2022-04-05"
         },
         "source": {
           "type": "string",
