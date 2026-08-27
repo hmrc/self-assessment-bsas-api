@@ -24,13 +24,13 @@
       "properties": {
         "startDate": {
           "type": "string",
-          "description": "The date the accounting period started.",
+          "description": "The date the accounting period started. This must be the 6th of April.",
           "format": "date",
           "example": "2019-04-06"
         },
         "endDate": {
           "type": "string",
-          "description": "The date the accounting period ended.",
+          "description": "The date the accounting period ended. This must be the 5th of April",
           "format": "date",
           "example": "2020-04-05"
         }
