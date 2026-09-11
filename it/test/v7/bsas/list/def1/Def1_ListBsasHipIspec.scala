@@ -110,10 +110,7 @@ class Def1_ListBsasHipIspec extends IntegrationBaseSpec with Def1_ListBsasFixtur
 
     "downstream service error" when {
 
-      def serviceErrorTest(downstreamStatus: Int,
-                           downstreamCode: String,
-                           expectedStatus: Int,
-                           expectedBody: MtdError): Unit = {
+      def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
 
         s"downstream returns an $downstreamCode error and status $downstreamStatus" in new TysHipTest {
 
@@ -177,7 +174,7 @@ class Def1_ListBsasHipIspec extends IntegrationBaseSpec with Def1_ListBsasFixtur
 
     private def mtdQueryParams: Seq[(String, String)] = List(
       "typeOfBusiness" -> typeOfBusiness,
-      "businessId" -> businessId
+      "businessId"     -> businessId
     ).collect { case (k, Some(v)) => (k, v) }
 
     def errorBody(`type`: String): String = {
@@ -195,10 +192,12 @@ class Def1_ListBsasHipIspec extends IntegrationBaseSpec with Def1_ListBsasFixtur
          |}
       """.stripMargin
     }
+
   }
 
   private trait TysHipTest extends Test {
     def taxYear: String                = "2023-24"
     override def downstreamUri: String = s"/itsa/income-tax/v1/23-24/adjustable-summary-calculation/$nino"
   }
+
 }
