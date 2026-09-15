@@ -162,7 +162,7 @@ class Def2_ListBsasIfsIspec extends IntegrationBaseSpec with Def2_ListBsasFixtur
 
     private def mtdQueryParams: Seq[(String, String)] = List(
       "typeOfBusiness" -> typeOfBusiness,
-      "businessId" -> businessId
+      "businessId"     -> businessId
     ).collect { case (k, Some(v)) => (k, v) }
 
     def request: WSRequest = {
