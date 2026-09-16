@@ -83,7 +83,7 @@ get:
       content:
         application/json:
           schema:
-            oneOf:
+            anyOf:
               - $ref: "./schemas/retrieve_uk_property/def1/retrieve_uk_property.json"
               - $ref: "./schemas/retrieve_uk_property/def1a/retrieve_uk_property.json"
               - $ref: "./schemas/retrieve_uk_property/def2/retrieve_uk_property.json"
