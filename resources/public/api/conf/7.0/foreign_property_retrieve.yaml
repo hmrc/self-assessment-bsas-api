@@ -88,7 +88,7 @@ get:
       content:
         application/json:
           schema:
-            oneOf:
+            anyOf:
               - $ref: "./schemas/retrieve_foreign_property/def1/retrieve_foreign_property.json"
               - $ref: "./schemas/retrieve_foreign_property/def1a/retrieve_foreign_property.json"
               - $ref: "./schemas/retrieve_foreign_property/def2/retrieve_foreign_property.json"

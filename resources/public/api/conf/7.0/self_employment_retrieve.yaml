@@ -76,7 +76,7 @@ get:
       content:
         application/json:
           schema:
-            oneOf:
+            anyOf:
               - $ref: "./schemas/retrieve_self_employment/def1/response.json"
               - $ref: "./schemas/retrieve_self_employment/def2/response.json"
               - $ref: "./schemas/retrieve_self_employment/def3/response.json"

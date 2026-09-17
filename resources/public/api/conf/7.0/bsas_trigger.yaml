@@ -39,7 +39,7 @@ post:
     content:
       application/json:
         schema:
-          oneOf:
+          anyOf:
             - $ref: "./schemas/trigger/def1/request.json"
             - $ref: "./schemas/trigger/def2/request.json"
         examples:

@@ -47,7 +47,7 @@ post:
     content:
       application/json:
         schema:
-          oneOf:
+          anyOf:
             - $ref: './schemas/submit_foreign_property_accounting_adjustments/def1/request.json'
             - $ref: './schemas/submit_foreign_property_accounting_adjustments/def2/request.json'
             - $ref: './schemas/submit_foreign_property_accounting_adjustments/def3/request.json'

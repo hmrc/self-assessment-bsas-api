@@ -44,7 +44,7 @@ post:
     content:
       application/json:
         schema:
-          oneOf:
+          anyOf:
             - $ref: "./schemas/submit_self_employment_accounting_adjustments/def1/request.json"
             - $ref: "./schemas/submit_self_employment_accounting_adjustments/def2/request.json"
         examples:
