@@ -61,9 +61,6 @@ object RuleAccountingPeriodNotEndedError
 
 object RuleNoAccountingPeriodError extends MtdError("RULE_NO_ACCOUNTING_PERIOD", "The supplied accounting period does not exist", BAD_REQUEST)
 
-object RulePeriodicDataIncompleteError
-    extends MtdError("RULE_PERIODIC_DATA_INCOMPLETE", "One or more periodic updates missing for this accounting period", BAD_REQUEST)
-
 object RuleTypeOfBusinessIncorrectError
     extends MtdError("RULE_TYPE_OF_BUSINESS_INCORRECT", "The calculation ID supplied relates to a different type of business", BAD_REQUEST)
 
