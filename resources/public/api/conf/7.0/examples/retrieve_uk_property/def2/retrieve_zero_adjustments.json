@@ -38,7 +38,6 @@
       "costOfServices": 156001.76,
       "travelCosts": 82.78,
       "residentialFinancialCost": 0,
-      "broughtFwdResidentialFinancialCost": 0.12,
       "other": 88.12
     },
     "netProfit": 0.12,
@@ -83,7 +82,6 @@
       "costOfServices": 156001.76,
       "travelCosts": 82.78,
       "residentialFinancialCost": 0,
-      "broughtFwdResidentialFinancialCost": 0.12,
       "other": -88.12
     },
     "netProfit": 0.12,

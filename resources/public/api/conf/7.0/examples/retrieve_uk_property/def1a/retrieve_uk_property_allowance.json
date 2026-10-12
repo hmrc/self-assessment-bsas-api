@@ -40,8 +40,7 @@
       "financialCosts": 0.12,
       "professionalFees": 0.12,
       "costOfServices": 0.12,
-      "residentialFinancialCost": 0.12,
-      "broughtFwdResidentialFinancialCost": 0.12,
+      "residentialFinancialCost": 0,
       "other": 0.12,
       "travelCosts": 0.12
     },
@@ -91,8 +90,7 @@
       "financialCosts": 0.12,
       "professionalFees": 0.12,
       "costOfServices": 0.12,
-      "residentialFinancialCost": 0.12,
-      "broughtFwdResidentialFinancialCost": 0.12,
+      "residentialFinancialCost": 0,
       "other": 0.12,
       "travelCosts": 0.12
     },
