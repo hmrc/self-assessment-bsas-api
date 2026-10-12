@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,8 +71,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |  "professionalFees": 0.10,
       |  "travelCosts": 0.11,
       |  "costOfServices": 0.12,
-      |  "residentialFinancialCost": 0.13,
-      |  "broughtFwdResidentialFinancialCost": 0.14,
+      |  "residentialFinancialCost": 0,
       |  "other": 0.15
       |}""".stripMargin
   )
@@ -238,8 +237,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |  "professionalFees": 0.10,
       |  "travelCosts": 0.11,
       |  "costOfServices": 0.12,
-      |  "residentialFinancialCost": 0.13,
-      |  "broughtFwdResidentialFinancialCost": 0.14,
+      |  "residentialFinancialCost": 0,
       |  "other": 0.15
       |}""".stripMargin
   )
@@ -428,8 +426,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     financialCosts = Some(0.09),
     professionalFees = Some(0.10),
     costOfServices = Some(0.12),
-    residentialFinancialCost = Some(0.13),
-    broughtFwdResidentialFinancialCost = Some(0.14),
+    residentialFinancialCost = Some(0),
     other = Some(0.15),
     travelCosts = Some(0.11)
   )

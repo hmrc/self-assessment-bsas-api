@@ -257,7 +257,7 @@
               "example": 1000.45
             },
             "residentialFinancialCost": {
-              "description": "Captures residential financial cost that can be deductible from rental income (tax relief). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Captures residential financial cost that can be deductible from rental income (tax relief). The value must be between 0 and 99999999999.99 up to 2 decimal places. Residential financial costs are treated as a tax relief rather than an expense and are therefore returned as 0 in summary calculations.",
               "type": "number",
               "multipleOf": 0.01,
               "minimum": 0,
@@ -265,8 +265,9 @@
               "example": 1000.45
             },
             "broughtFwdResidentialFinancialCost": {
-              "description": "Amount of relief brought forward for restricted residential financial costs. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Amount of relief brought forward for restricted residential financial costs. The value must be between 0 and 99999999999.99 up to 2 decimal places. This field is deprecated and will be removed in a future release. Brought forward residential financial costs are not returned in summary calculations.",
               "type": "number",
+              "deprecated": true,
               "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
@@ -542,7 +543,7 @@
                     "example": 1000.45
                   },
                   "residentialFinancialCost": {
-                    "description": "Captures residential financial cost that can be deductible from rental income (tax relief). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "description": "Captures residential financial cost that can be deductible from rental income (tax relief). The value must be between 0 and 99999999999.99 up to 2 decimal places. Residential financial costs are treated as a tax relief rather than an expense and are therefore returned as 0 in summary calculations.",
                     "type": "number",
                     "multipleOf": 0.01,
                     "minimum": 0,
@@ -550,8 +551,9 @@
                     "example": 1000.45
                   },
                   "broughtFwdResidentialFinancialCost": {
-                    "description": "Amount of relief brought forward for restricted residential financial costs. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "description": "Amount of relief brought forward for restricted residential financial costs. The value must be between 0 and 99999999999.99 up to 2 decimal places. This field is deprecated and will be removed in a future release. Brought forward residential financial costs are not returned in summary calculations.",
                     "type": "number",
+                    "deprecated": true,
                     "multipleOf": 0.01,
                     "minimum": 0,
                     "maximum": 99999999999.99,
@@ -819,7 +821,7 @@
                     "example": 1000.45
                   },
                   "residentialFinancialCost": {
-                    "description": "Captures residential financial cost that can be deductible from rental income (tax relief). The value must be between 0 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+                    "description": "Captures residential financial cost that can be deductible from rental income (tax relief). The value must be between 0 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00). Residential financial costs are treated as a tax relief rather than an expense and are therefore returned as 0 in summary calculations.",
                     "type": "number",
                     "multipleOf": 0.01,
                     "minimum": 0,
@@ -1060,7 +1062,7 @@
               "example": 1000.45
             },
             "residentialFinancialCost": {
-              "description": "Captures residential financial cost that can be deductible from rental income (tax relief). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Captures residential financial cost that can be deductible from rental income (tax relief). The value must be between 0 and 99999999999.99 up to 2 decimal places. Residential financial costs are treated as a tax relief rather than an expense and are therefore returned as 0 in summary calculations.",
               "type": "number",
               "multipleOf": 0.01,
               "minimum": 0,
@@ -1068,8 +1070,9 @@
               "example": 1000.45
             },
             "broughtFwdResidentialFinancialCost": {
-              "description": "Amount of relief brought forward for restricted residential financial costs. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Amount of relief brought forward for restricted residential financial costs. The value must be between 0 and 99999999999.99 up to 2 decimal places. This field is deprecated and will be removed in a future release. Brought forward residential financial costs are not returned in summary calculations.",
               "type": "number",
+              "deprecated": true,
               "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
@@ -1345,7 +1348,7 @@
                     "example": 1000.45
                   },
                   "residentialFinancialCost": {
-                    "description": "Captures residential financial cost that can be deductible from rental income (tax relief). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "description": "Captures residential financial cost that can be deductible from rental income (tax relief). The value must be between 0 and 99999999999.99 up to 2 decimal places. Residential financial costs are treated as a tax relief rather than an expense and are therefore returned as 0 in summary calculations.",
                     "type": "number",
                     "multipleOf": 0.01,
                     "minimum": 0,
@@ -1353,8 +1356,9 @@
                     "example": 1000.45
                   },
                   "broughtFwdResidentialFinancialCost": {
-                    "description": "Amount of relief brought forward for restricted residential financial costs. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "description": "Amount of relief brought forward for restricted residential financial costs. The value must be between 0 and 99999999999.99 up to 2 decimal places. This field is deprecated and will be removed in a future release. Brought forward residential financial costs are not returned in summary calculations.",
                     "type": "number",
+                    "deprecated": true,
                     "multipleOf": 0.01,
                     "minimum": 0,
                     "maximum": 99999999999.99,

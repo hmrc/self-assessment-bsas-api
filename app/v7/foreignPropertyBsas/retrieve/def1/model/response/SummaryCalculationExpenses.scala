@@ -25,7 +25,6 @@ case class SummaryCalculationExpenses(consolidatedExpenses: Option[BigDecimal],
                                       professionalFees: Option[BigDecimal],
                                       costOfServices: Option[BigDecimal],
                                       residentialFinancialCost: Option[BigDecimal],
-                                      broughtFwdResidentialFinancialCost: Option[BigDecimal],
                                       other: Option[BigDecimal],
                                       travelCosts: Option[BigDecimal])
 

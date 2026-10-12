@@ -94,7 +94,7 @@
                     "example": 1000.45
                   },
                   "residentialFinancialCost": {
-                    "description": "The adjustment to the residential financial cost that can be deductible from rental income (tax relief). The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+                    "description": "The adjustment to the residential financial cost that can be deductible from rental income (tax relief). The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00). Values submitted through this field are accepted but are not reflected in summary calculations, where this value is returned as 0.",
                     "type": "number",
                     "minimum": -99999999999.99,
                     "maximum": 99999999999.99,
