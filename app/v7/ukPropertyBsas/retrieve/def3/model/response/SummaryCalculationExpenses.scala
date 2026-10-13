@@ -26,6 +26,7 @@ case class SummaryCalculationExpenses(
     financialCosts: Option[BigDecimal],
     professionalFees: Option[BigDecimal],
     costOfServices: Option[BigDecimal],
+    residentialFinancialCost: Option[BigDecimal],
     other: Option[BigDecimal],
     travelCosts: Option[BigDecimal]
 )
@@ -39,6 +40,7 @@ object SummaryCalculationExpenses {
       (JsPath \ "financialCosts").readNullable[BigDecimal] and
       (JsPath \ "professionalFees").readNullable[BigDecimal] and
       (JsPath \ "costOfServices").readNullable[BigDecimal] and
+      (JsPath \ "residentialFinancialCost").readNullable[BigDecimal] and
       (JsPath \ "other").readNullable[BigDecimal] and
       (JsPath \ "travelCosts").readNullable[BigDecimal]
   )(SummaryCalculationExpenses.apply)
