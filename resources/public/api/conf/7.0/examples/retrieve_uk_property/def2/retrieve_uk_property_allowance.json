@@ -37,8 +37,7 @@
       "professionalFees": 100.00,
       "costOfServices": 156001.76,
       "travelCosts": 82.78,
-      "residentialFinancialCost": 98,
-      "broughtFwdResidentialFinancialCost": 0.12,
+      "residentialFinancialCost": 0,
       "other": 88.12
     },
     "netProfit": 0.12,
@@ -87,8 +86,7 @@
       "financialCosts": 0.12,
       "professionalFees": 0.12,
       "costOfServices": 0.12,
-      "residentialFinancialCost": 0.12,
-      "broughtFwdResidentialFinancialCost": 0.12,
+      "residentialFinancialCost": 0,
       "other": 0.12,
       "travelCosts": 0.12
     },

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "For TY 2024-25",
+  "title": "For TY 2020-21 to TY 2023-24",
   "description": "Retrieve a UK property Business Source Adjustable Summary Response.",
   "type": "object",
   "properties": {
@@ -215,6 +215,8 @@
           "description": "The total expenses for the income source. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
           "multipleOf": 0.01,
+          "minimum": -99999999999.99,
+          "maximum": 99999999999.99,
           "example": 2000.50
         },
         "expenses": {
@@ -222,82 +224,83 @@
           "description": "Object containing the expenses for UK property income sources.",
           "properties": {
             "consolidatedExpenses": {
-              "description": "Sum of all expenses for the specified period. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
-              "type": "number",
-              "multipleOf": 0.01,
-              "minimum": -99999999999.99,
-              "maximum": 99999999999.99,
-              "example": 1000.45
-            },
-            "premisesRunningCosts": {
-              "description": "Rent, rates, insurance, ground rents etc. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
-              "type": "number",
-              "multipleOf": 0.01,
-              "minimum": -99999999999.99,
-              "maximum": 99999999999.99,
-              "example": 1000.45
-            },
-            "repairsAndMaintenance": {
-              "description": "Property repairs and maintenance. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
-              "type": "number",
-              "multipleOf": 0.01,
-              "minimum": -99999999999.99,
-              "maximum": 99999999999.99,
-              "example": 1000.45
-            },
-            "financialCosts": {
-              "description": "Loan interest and other financial costs. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
-              "type": "number",
-              "multipleOf": 0.01,
-              "minimum": -99999999999.99,
-              "maximum": 99999999999.99,
-              "example": 1000.45
-            },
-            "professionalFees": {
-              "description": "Legal, management and other professional fees. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
-              "type": "number",
-              "multipleOf": 0.01,
-              "minimum": -99999999999.99,
-              "maximum": 99999999999.99,
-              "example": 1000.45
-            },
-            "costOfServices": {
-              "description": "Cost of services provided, including wages. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
-              "type": "number",
-              "multipleOf": 0.01,
-              "minimum": -99999999999.99,
-              "maximum": 99999999999.99,
-              "example": 1000.45
-            },
-            "residentialFinancialCost": {
-              "description": "Captures residential financial cost that can be deductible from rental income (tax relief). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Sum of all expenses for the specified period. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
               "example": 1000.45
             },
-            "broughtFwdResidentialFinancialCost": {
-              "description": "Amount of relief brought forward for restricted residential financial costs. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "premisesRunningCosts": {
+              "description": "Rent, rates, insurance, ground rents etc. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 1000.45
+            },
+            "repairsAndMaintenance": {
+              "description": "Property repairs and maintenance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 1000.45
+            },
+            "financialCosts": {
+              "description": "Loan interest and other financial costs. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 1000.45
+            },
+            "professionalFees": {
+              "description": "Legal, management and other professional fees. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 1000.45
+            },
+            "costOfServices": {
+              "description": "Cost of services provided, including wages. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 1000.45
+            },
+            "residentialFinancialCost": {
+              "description": "Captures residential financial cost that can be deductible from rental income (tax relief). The value must be between 0 and 99999999999.99 up to 2 decimal places. Residential financial costs are treated as a tax relief rather than an expense and are therefore returned as 0 in summary calculations.",
+              "type": "number",
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 0
+            },
+            "broughtFwdResidentialFinancialCost": {
+              "description": "Amount of relief brought forward for restricted residential financial costs. The value must be between 0 and 99999999999.99 up to 2 decimal places. This field is deprecated and will be removed in a future release. Brought forward residential financial costs are not returned in summary calculations.",
+              "type": "number",
+              "deprecated": true,
               "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
               "example": 1000.45
             },
             "other": {
-              "description": "Other allowable property expenses. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+              "description": "Other allowable property expenses. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "multipleOf": 0.01,
-              "minimum": -99999999999.99,
+              "minimum": 0,
               "maximum": 99999999999.99,
               "example": 1000.45
             },
             "travelCosts": {
-              "description": "Car, van and travel costs incurred in running a property business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+              "description": "Car, van and travel costs incurred in running a property business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "multipleOf": 0.01,
-              "minimum": -99999999999.99,
+              "minimum": 0,
               "maximum": 99999999999.99,
               "example": 1000.45
             }
@@ -519,7 +522,7 @@
         },
         "expenses": {
           "type": "object",
-          "description": "Object containing the adjustments to expenses.",
+          "description": "Object containing the adjustments to income.",
           "properties": {
             "consolidatedExpenses": {
               "description": "Sum of all expenses for the specified period. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 values or 0.00 values).",
@@ -570,10 +573,10 @@
               "example": 10000.45
             },
             "residentialFinancialCost": {
-              "description": "Captures residential financial cost that can be deductible from rental income (tax relief). The value must be between 0 and 99999999999.99 up to 2 decimal places (excluding 0 values or 0.00 values).",
+              "description": "Captures residential financial cost that can be deductible from rental income (tax relief). The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 values or 0.00 values). Residential financial costs are treated as a tax relief rather than an expense and are therefore returned as 0 in summary calculations.",
               "type": "number",
               "multipleOf": 0.01,
-              "minimum": 0,
+              "minimum": -99999999999.99,
               "maximum": 99999999999.99,
               "example": 10000.45
             },
@@ -594,13 +597,6 @@
               "example": 10000.45
             }
           }
-        },
-        "zeroAdjustments": {
-          "type": "boolean",
-          "description": "Indicates zero adjustments for all income and expenses. The value must be true if this is the case.",
-          "enum": [
-            true
-          ]
         }
       }
     },
@@ -637,7 +633,7 @@
               "example": 1000.45
             },
             "reversePremiums": {
-              "description": "Reverse premiums and inducements. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Reverse premiums and inducements. Any expense or partial expense that cannot be claimed for tax purposes.  The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "multipleOf": 0.01,
               "minimum": 0,
@@ -663,10 +659,10 @@
           }
         },
         "totalExpenses": {
-          "description": "The total expenses for the income source. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+          "description": "The total expenses for the income source. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
           "multipleOf": 0.01,
-          "minimum": -99999999999.99,
+          "minimum": 0,
           "maximum": 99999999999.99,
           "example": 2000.50
         },
@@ -675,82 +671,83 @@
           "description": "Object containing the expenses for UK property income sources.",
           "properties": {
             "consolidatedExpenses": {
-              "description": "Sum of all expenses for the specified period. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
-              "type": "number",
-              "multipleOf": 0.01,
-              "minimum": -99999999999.99,
-              "maximum": 99999999999.99,
-              "example": 1000.45
-            },
-            "premisesRunningCosts": {
-              "description": "Rent, rates, insurance, ground rents etc. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
-              "type": "number",
-              "multipleOf": 0.01,
-              "minimum": -99999999999.99,
-              "maximum": 99999999999.99,
-              "example": 1000.45
-            },
-            "repairsAndMaintenance": {
-              "description": "Property repairs and maintenance. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
-              "type": "number",
-              "multipleOf": 0.01,
-              "minimum": -99999999999.99,
-              "maximum": 99999999999.99,
-              "example": 1000.45
-            },
-            "financialCosts": {
-              "description": "Loan interest and other financial costs. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
-              "type": "number",
-              "multipleOf": 0.01,
-              "minimum": -99999999999.99,
-              "maximum": 99999999999.99,
-              "example": 1000.45
-            },
-            "professionalFees": {
-              "description": "Legal, management and other professional fees. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
-              "type": "number",
-              "multipleOf": 0.01,
-              "minimum": -99999999999.99,
-              "maximum": 99999999999.99,
-              "example": 1000.45
-            },
-            "costOfServices": {
-              "description": "Cost of services provided, including wages. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
-              "type": "number",
-              "multipleOf": 0.01,
-              "minimum": -99999999999.99,
-              "maximum": 99999999999.99,
-              "example": 1000.45
-            },
-            "residentialFinancialCost": {
-              "description": "Captures residential financial cost that can be deductible from rental income (tax relief). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Sum of all expenses for the specified period. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
               "example": 1000.45
             },
-            "broughtFwdResidentialFinancialCost": {
-              "description": "Amount of relief brought forward for restricted residential financial costs. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "premisesRunningCosts": {
+              "description": "Rent, rates, insurance, ground rents etc. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 1000.45
+            },
+            "repairsAndMaintenance": {
+              "description": "Property repairs and maintenance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 1000.45
+            },
+            "financialCosts": {
+              "description": "Loan interest and other financial costs. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 1000.45
+            },
+            "professionalFees": {
+              "description": "Legal, management and other professional fees. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 1000.45
+            },
+            "costOfServices": {
+              "description": "Cost of services provided, including wages. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 1000.45
+            },
+            "residentialFinancialCost": {
+              "description": "Captures residential financial cost that can be deductible from rental income (tax relief). The value must be between 0 and 99999999999.99 up to 2 decimal places. Residential financial costs are treated as a tax relief rather than an expense and are therefore returned as 0 in summary calculations.",
+              "type": "number",
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 0
+            },
+            "broughtFwdResidentialFinancialCost": {
+              "description": "Amount of relief brought forward for restricted residential financial costs. The value must be between 0 and 99999999999.99 up to 2 decimal places. This field is deprecated and will be removed in a future release. Brought forward residential financial costs are not returned in summary calculations. ",
+              "type": "number",
+              "deprecated": true,
               "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
               "example": 1000.45
             },
             "other": {
-              "description": "Other allowable property expenses. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+              "description": "Other allowable property expenses. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "multipleOf": 0.01,
-              "minimum": -99999999999.99,
+              "minimum": 0,
               "maximum": 99999999999.99,
               "example": 1000.45
             },
             "travelCosts": {
-              "description": "Car, van and travel costs incurred in running a property business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+              "description": "Car, van and travel costs incurred in running a property business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "multipleOf": 0.01,
-              "minimum": -99999999999.99,
+              "minimum": 0,
               "maximum": 99999999999.99,
               "example": 1000.45
             }

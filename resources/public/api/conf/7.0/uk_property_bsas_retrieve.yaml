@@ -86,47 +86,64 @@ get:
             anyOf:
               - $ref: "./schemas/retrieve_uk_property/def1/retrieve_uk_property.json"
               - $ref: "./schemas/retrieve_uk_property/def1a/retrieve_uk_property.json"
+              - $ref: "./schemas/retrieve_uk_property/def1b/retrieve_uk_property.json"
               - $ref: "./schemas/retrieve_uk_property/def2/retrieve_uk_property.json"
               {{#if (enabled 'r22_fya_docs')}}
               - $ref: "./schemas/retrieve_uk_property/def3/retrieve_uk_property.json"
               {{/if}}
           examples:
-            PRE-TY-2024-25-UK-FHL-Response:
+            PRE-TY-2020-21-UK-FHL-Response:
               description: UK FHL Response
               value:
                 $ref: "./examples/retrieve_uk_property/def1/retrieve_uk_fhl_property.json"
-            PRE-TY-2024-25-UK-Property-Response:
+            PRE-TY-2020-21-UK-Property-Response:
               description: UK Property Response
               value:
                 $ref: "./examples/retrieve_uk_property/def1/retrieve_uk_property.json"
-            PRE-TY-2024-25-UK-Property-Consolidated-Expenses-Response:
+            PRE-TY-2020-21-UK-Property-Consolidated-Expenses-Response:
               description: UK Property with Consolidated Expenses Response
               value:
                 $ref: "./examples/retrieve_uk_property/def1/retrieve_uk_property_consolidated.json"
-            PRE-TY-2024-25-UK-Property-With-Property-Allowance-Response:
+            PRE-TY-2020-21-UK-Property-With-Property-Allowance-Response:
               description: UK Property with Property Allowance Response
               value:
                 $ref: "./examples/retrieve_uk_property/def1/retrieve_uk_property_allowance.json"
-            TY-2024-25-UK-FHL-Response:
+            TY-2020-21-to-2023-24-UK-FHL-Response:
               description: UK FHL Response
               value:
                 $ref: "./examples/retrieve_uk_property/def1a/retrieve_uk_fhl_property.json"
-            TY-2024-25-UK-Property-Response:
+            TY-2020-21-to-2023-24-UK-Property-Response:
               description: UK Property Response
               value:
                 $ref: "./examples/retrieve_uk_property/def1a/retrieve_uk_property.json"
-            TY-2024-25-UK-Property-Consolidated-Expenses-Response:
+            TY-2020-21-to-2023-24-UK-Property-Consolidated-Expenses-Response:
               description: UK Property with Consolidated Expenses Response
               value:
                 $ref: "./examples/retrieve_uk_property/def1a/retrieve_uk_property_consolidated.json"
-            TY-2024-25-UK-Property-With-Property-Allowance-Response:
+            TY-2020-21-to-2023-24-UK-Property-With-Property-Allowance-Response:
               description: UK Property with Property Allowance Response
               value:
                 $ref: "./examples/retrieve_uk_property/def1a/retrieve_uk_property_allowance.json"
+            TY-2024-25-UK-FHL-Response:
+              description: UK FHL Response
+              value:
+                $ref: "./examples/retrieve_uk_property/def1b/retrieve_uk_fhl_property.json"
+            TY-2024-25-UK-Property-Response:
+              description: UK Property Response
+              value:
+                $ref: "./examples/retrieve_uk_property/def1b/retrieve_uk_property.json"
+            TY-2024-25-UK-Property-Consolidated-Expenses-Response:
+              description: UK Property with Consolidated Expenses Response
+              value:
+                $ref: "./examples/retrieve_uk_property/def1b/retrieve_uk_property_consolidated.json"
+            TY-2024-25-UK-Property-With-Property-Allowance-Response:
+              description: UK Property with Property Allowance Response
+              value:
+                $ref: "./examples/retrieve_uk_property/def1b/retrieve_uk_property_allowance.json"
             TY-2024-25-Zero-Adjustments-Response:
               description: Zero Adjustments Response
               value:
-                $ref: "./examples/retrieve_uk_property/def1a/retrieve_zero_adjustments.json"
+                $ref: "./examples/retrieve_uk_property/def1b/retrieve_zero_adjustments.json"
             TY-2025-26-UK-Property-Response:
               description: UK Property Response
               value:

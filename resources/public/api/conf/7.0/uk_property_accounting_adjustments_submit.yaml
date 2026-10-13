@@ -48,8 +48,10 @@ post:
         schema:
           anyOf:
             - $ref: "./schemas/submit_uk_property_accounting_adjustments/def1/request.json"
+            - $ref: "./schemas/submit_uk_property_accounting_adjustments/def1a/request.json"
             - $ref: "./schemas/submit_uk_property_accounting_adjustments/def2/request.json"
             - $ref: "./schemas/submit_uk_property_accounting_adjustments/def3/request.json"
+            - $ref: "./schemas/submit_uk_property_accounting_adjustments/def4/request.json"
         examples:
           UK Property with Full Expenses for TY 2023-24 and before:
             value:
@@ -81,15 +83,24 @@ post:
           UK Property FHL Zero Adjustments request for TY 2024-25:
             value:
               $ref: './examples/submit_uk_property_accounting_adjustments/def2/submit_uk_fhl_property_accounting_adjustments_zero.json'
-          UK Property with Full Expenses for TY 2025-26 and after:
+          UK Property with Full Expenses for TY 2025-26:
             value:
               $ref: "./examples/submit_uk_property_accounting_adjustments/def3/submit_uk_property_accounting_adjustments_full_request.json"
-          UK Property with Consolidated Expenses for TY-2025-26 and after:
+          UK Property with Consolidated Expenses for TY-2025-26:
             value:
               $ref: "./examples/submit_uk_property_accounting_adjustments/def3/submit_uk_property_accounting_adjustments_consolidated_request.json"
-          Zero Adjustments request for TY 2025-26 and after:
+          Zero Adjustments request for TY 2025-26:
             value:
               $ref: './examples/submit_uk_property_accounting_adjustments/def3/submit_uk_property_accounting_adjustments_zero.json'
+          UK Property with Full Expenses for TY 2026-27 onwards:
+            value:
+              $ref: "./examples/submit_uk_property_accounting_adjustments/def4/submit_uk_property_accounting_adjustments_full_request.json"
+          UK Property with Consolidated Expenses for TY 2026-27 onwards:
+            value:
+              $ref: "./examples/submit_uk_property_accounting_adjustments/def4/submit_uk_property_accounting_adjustments_consolidated_request.json"
+          Zero Adjustments request for TY 2026-27 onwards:
+            value:
+              $ref: './examples/submit_uk_property_accounting_adjustments/def4/submit_uk_property_accounting_adjustments_zero.json'
   responses:
     200:
       description: Success

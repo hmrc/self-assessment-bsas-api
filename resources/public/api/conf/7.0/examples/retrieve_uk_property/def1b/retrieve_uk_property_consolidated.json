@@ -35,15 +35,7 @@
     },
     "totalExpenses": 0.12,
     "expenses": {
-      "premisesRunningCosts": -509.67,
-      "repairsAndMaintenance": 50,
-      "financialCosts": -67.98,
-      "professionalFees": 100.00,
-      "costOfServices": 156001.76,
-      "travelCosts": 82.78,
-      "residentialFinancialCost": 98,
-      "broughtFwdResidentialFinancialCost": 0.12,
-      "other": 88.12
+      "consolidatedExpenses": 0.12
     },
     "netProfit": 0.12,
     "totalAdditions": 0.12,
@@ -68,7 +60,15 @@
     "taxableProfit": 12500
   },
   "adjustments": {
-    "zeroAdjustments": true
+    "income": {
+      "totalRentsReceived": 0.12,
+      "premiumsOfLeaseGrant": 0.12,
+      "reversePremiums": 0.12,
+      "otherPropertyIncome": 0.12
+    },
+    "expenses": {
+      "consolidatedExpenses": 0.12
+    }
   },
   "adjustedSummaryCalculation": {
     "totalIncome": 0.12,
@@ -81,15 +81,7 @@
     },
     "totalExpenses": 0.12,
     "expenses": {
-      "premisesRunningCosts": 9.67,
-      "repairsAndMaintenance": 50,
-      "financialCosts": 67.98,
-      "professionalFees": 100.00,
-      "costOfServices": 156001.76,
-      "travelCosts": 82.78,
-      "residentialFinancialCost": 98,
-      "broughtFwdResidentialFinancialCost": 0.12,
-      "other": -88.12
+      "consolidatedExpenses": 0.12
     },
     "netProfit": 0.12,
     "totalAdditions": 0.12,
@@ -111,6 +103,6 @@
       "enhancedStructuredBuildingAllowance": 0.12,
       "zeroEmissionsCarAllowance": 0.12
     },
-    "taxableProfit": 12500
+    "taxableProfit": 22500
   }
 }
