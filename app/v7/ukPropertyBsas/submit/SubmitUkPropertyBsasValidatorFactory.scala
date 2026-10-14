@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import v7.ukPropertyBsas.submit.SubmitUkPropertyBsasSchema.*
 import v7.ukPropertyBsas.submit.def1.Def1_SubmitUkPropertyBsasValidator
 import v7.ukPropertyBsas.submit.def2.Def2_SubmitUkPropertyBsasValidator
 import v7.ukPropertyBsas.submit.def3.Def3_SubmitUkPropertyBsasValidator
+import v7.ukPropertyBsas.submit.def4.Def4_SubmitUkPropertyBsasValidator
 import v7.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData
 
 import javax.inject.Singleton
@@ -41,6 +42,7 @@ class SubmitUkPropertyBsasValidatorFactory {
       case Valid(Def1)     => new Def1_SubmitUkPropertyBsasValidator(nino, calculationId, taxYear, body)
       case Valid(Def2)     => new Def2_SubmitUkPropertyBsasValidator(nino, calculationId, taxYear, body)
       case Valid(Def3)     => new Def3_SubmitUkPropertyBsasValidator(nino, calculationId, taxYear, body)
+      case Valid(Def4)     => new Def4_SubmitUkPropertyBsasValidator(nino, calculationId, taxYear, body)
       case Invalid(errors) => Validator.returningErrors(errors)
     }
 

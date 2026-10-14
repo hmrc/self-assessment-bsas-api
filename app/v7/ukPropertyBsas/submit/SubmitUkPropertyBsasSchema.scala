@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,15 +31,17 @@ object SubmitUkPropertyBsasSchema {
   case object Def1 extends SubmitUkPropertyBsasSchema
   case object Def2 extends SubmitUkPropertyBsasSchema
   case object Def3 extends SubmitUkPropertyBsasSchema
+  case object Def4 extends SubmitUkPropertyBsasSchema
 
   def schemaFor(taxYearString: String): Validated[Seq[MtdError], SubmitUkPropertyBsasSchema] = {
     ResolveTaxYear(taxYearString) andThen schemaFor
   }
 
   def schemaFor(taxYear: TaxYear): Validated[Seq[MtdError], SubmitUkPropertyBsasSchema] = {
-    if (taxYear <= TaxYear.starting(2023)) Valid(Def1)
-    else if (taxYear == TaxYear.starting(2024)) Valid(Def2)
-    else Valid(Def3)
+    if (taxYear <= TaxYear.ending(2024)) Valid(Def1)
+    else if (taxYear == TaxYear.ending(2025)) Valid(Def2)
+    else if (taxYear == TaxYear.ending(2026)) Valid(Def3)
+    else Valid(Def4)
   }
 
 }

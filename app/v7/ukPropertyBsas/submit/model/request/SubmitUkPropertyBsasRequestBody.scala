@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import play.api.libs.json.*
 import v7.ukPropertyBsas.submit.def1.model.request.Def1_SubmitUkPropertyBsasRequestBody
 import v7.ukPropertyBsas.submit.def2.model.request.Def2_SubmitUkPropertyBsasRequestBody
 import v7.ukPropertyBsas.submit.def3.model.request.Def3_SubmitUkPropertyBsasRequestBody
+import v7.ukPropertyBsas.submit.def4.model.request.Def4_SubmitUkPropertyBsasRequestBody
 
 trait SubmitUkPropertyBsasRequestBody
 
@@ -33,6 +34,8 @@ object SubmitUkPropertyBsasRequestBody extends JsonWritesUtil {
       implicitly[OWrites[Def2_SubmitUkPropertyBsasRequestBody]].writes(def2)
     case def3: Def3_SubmitUkPropertyBsasRequestBody =>
       implicitly[OWrites[Def3_SubmitUkPropertyBsasRequestBody]].writes(def3)
+    case def4: Def4_SubmitUkPropertyBsasRequestBody =>
+      implicitly[OWrites[Def4_SubmitUkPropertyBsasRequestBody]].writes(def4)
   }
 
 }

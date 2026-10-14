@@ -22,6 +22,7 @@ import play.api.libs.json.JsObject
 import v7.ukPropertyBsas.submit.def1.Def1_SubmitUkPropertyBsasValidator
 import v7.ukPropertyBsas.submit.def2.Def2_SubmitUkPropertyBsasValidator
 import v7.ukPropertyBsas.submit.def3.Def3_SubmitUkPropertyBsasValidator
+import v7.ukPropertyBsas.submit.def4.Def4_SubmitUkPropertyBsasValidator
 
 class SubmitUkPropertyBsasValidatorFactorySpec extends UnitSpec {
 
@@ -44,6 +45,12 @@ class SubmitUkPropertyBsasValidatorFactorySpec extends UnitSpec {
     "given a request corresponding to a Def3 schema" should {
       "return a Def3 validator" in {
         validatorFor("2025-26") shouldBe a[Def3_SubmitUkPropertyBsasValidator]
+      }
+    }
+
+    "given a request corresponding to a Def4 schema" should {
+      "return a Def4 validator" in {
+        validatorFor("2026-27") shouldBe a[Def4_SubmitUkPropertyBsasValidator]
       }
     }
 
