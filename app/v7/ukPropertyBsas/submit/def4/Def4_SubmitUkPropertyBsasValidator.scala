@@ -1,0 +1,48 @@
+/*
+ * Copyright 2026 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package v7.ukPropertyBsas.submit.def4
+
+import api.controllers.validators.Validator
+import api.controllers.validators.resolvers.*
+import api.models.errors.MtdError
+import cats.data.Validated
+import cats.implicits.*
+import play.api.libs.json.JsValue
+import v7.ukPropertyBsas.submit.def4.model.request.{Def4_SubmitUkPropertyBsasRequestBody, Def4_SubmitUkPropertyBsasRequestData}
+import v7.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData
+
+object Def4_SubmitUkPropertyBsasValidator extends ResolverSupport {
+
+  private val resolveJson = ResolveNonEmptyJsonObject.resolver[Def4_SubmitUkPropertyBsasRequestBody]
+
+  private val resolveTaxYear = ResolveTaxYear.resolver
+
+}
+
+class Def4_SubmitUkPropertyBsasValidator(nino: String, calculationId: String, taxYear: String, body: JsValue)
+    extends Validator[SubmitUkPropertyBsasRequestData] {
+  import Def4_SubmitUkPropertyBsasValidator.*
+
+  def validate: Validated[Seq[MtdError], SubmitUkPropertyBsasRequestData] =
+    (
+      ResolveNino(nino),
+      ResolveCalculationId(calculationId),
+      resolveTaxYear(taxYear),
+      resolveJson(body)
+    ).mapN(Def4_SubmitUkPropertyBsasRequestData.apply) andThen Def4_SubmitUkPropertyBsasRulesValidator.validateBusinessRules
+
+}
