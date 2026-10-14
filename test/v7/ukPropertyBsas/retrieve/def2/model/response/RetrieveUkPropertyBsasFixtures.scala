@@ -139,7 +139,6 @@ object RetrieveUkPropertyBsasFixtures {
        |  "professionalFees": 2.05,
        |  "costOfServices": 2.06,
        |  "residentialFinancialCost": 2.07,
-       |  "broughtFwdResidentialFinancialCost": 2.08,
        |  "other": 2.09,
        |  "travelCosts": 2.10
        |}
@@ -353,7 +352,6 @@ object RetrieveUkPropertyBsasFixtures {
        |  "professionalFees": 2.05,
        |  "costOfServices": 2.06,
        |  "residentialFinancialCost": 2.07,
-       |  "broughtFwdResidentialFinancialCost": 2.08,
        |  "other": 2.09,
        |  "travelCosts": 2.10
        |}
@@ -586,7 +584,6 @@ object RetrieveUkPropertyBsasFixtures {
     professionalFees = Some(2.05),
     costOfServices = Some(2.06),
     residentialFinancialCost = None,
-    broughtFwdResidentialFinancialCost = None,
     other = Some(2.09),
     travelCosts = Some(2.10)
   )
@@ -599,7 +596,6 @@ object RetrieveUkPropertyBsasFixtures {
     professionalFees = Some(2.05),
     costOfServices = Some(2.06),
     residentialFinancialCost = Some(2.07),
-    broughtFwdResidentialFinancialCost = Some(2.08),
     other = Some(2.09),
     travelCosts = Some(2.10)
   )
