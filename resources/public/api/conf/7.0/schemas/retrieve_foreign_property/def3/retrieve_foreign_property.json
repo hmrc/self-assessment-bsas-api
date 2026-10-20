@@ -399,6 +399,32 @@
           },
           "additionalProperties": false
         },
+        {{#if (enabled 'r23_cl531_docs')}}
+        "adjustedProfit": {
+        "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of adjusted net profit.",
+        "type": "number",
+        "multipleOf": 0.01,
+        "minimum": 0,
+        "maximum": 99999999999.99,
+        "example": 1000.45
+        },
+        "adjustedLoss": {
+        "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of adjusted net loss.",
+        "type": "number",
+        "multipleOf": 0.01,
+        "minimum": 0,
+        "maximum": 99999999999.99,
+        "example": 1000.45
+        },
+        "foreignTaxPaid": {
+        "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of foreign tax paid.",
+        "type": "number",
+        "multipleOf": 0.01,
+        "minimum": 0,
+        "maximum": 99999999999.99,
+        "example": 1000.45
+        },
+        {{/if}}
         "taxableProfit": {
           "description": "Amount of taxable net profit. The value must be between 0 and 99999999999 no decimal places.",
           "type": "number",
@@ -679,6 +705,32 @@
                 },
                 "additionalProperties": false
               },
+              {{#if (enabled 'r23_cl531_docs')}}
+              "adjustedProfit": {
+              "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of adjusted net profit.",
+              "type": "number",
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 1000.45
+              },
+              "adjustedLoss": {
+              "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of adjusted net loss.",
+              "type": "number",
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 1000.45
+              },
+              "foreignTaxPaid": {
+              "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of foreign tax paid.",
+              "type": "number",
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 1000.45
+              },
+              {{/if}}
               "taxableProfit": {
                 "description": "Amount of taxable net profit. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
                 "type": "number",
@@ -960,6 +1012,32 @@
                       },
                       "additionalProperties": false
                     },
+                    {{#if (enabled 'r23_cl531_docs')}}
+                    "adjustedProfit": {
+                    "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of adjusted net profit.",
+                    "type": "number",
+                    "multipleOf": 0.01,
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": 1000.45
+                    },
+                    "adjustedLoss": {
+                    "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of adjusted net loss.",
+                    "type": "number",
+                    "multipleOf": 0.01,
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": 1000.45
+                    },
+                    "foreignTaxPaid": {
+                    "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of foreign tax paid.",
+                    "type": "number",
+                    "multipleOf": 0.01,
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": 1000.45
+                    },
+                    {{/if}}
                     "taxableProfit": {
                       "description": "Amount of taxable net profit. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
                       "type": "number",
@@ -1394,6 +1472,32 @@
           },
           "additionalProperties": false
         },
+        {{#if (enabled 'r23_cl531_docs')}}
+        "adjustedProfit": {
+        "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of adjusted net profit.",
+        "type": "number",
+        "multipleOf": 0.01,
+        "minimum": 0,
+        "maximum": 99999999999.99,
+        "example": 1000.45
+        },
+        "adjustedLoss": {
+        "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of adjusted net loss.",
+        "type": "number",
+        "multipleOf": 0.01,
+        "minimum": 0,
+        "maximum": 99999999999.99,
+        "example": 1000.45
+        },
+        "foreignTaxPaid": {
+        "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of foreign tax paid.",
+        "type": "number",
+        "multipleOf": 0.01,
+        "minimum": 0,
+        "maximum": 99999999999.99,
+        "example": 1000.45
+        },
+        {{/if}}
         "taxableProfit": {
           "description": "Amount of taxable net profit. The value must be between 0 and 99999999999 no decimal places.",
           "type": "integer",
@@ -1673,6 +1777,32 @@
                 },
                 "additionalProperties": false
               },
+              {{#if (enabled 'r23_cl531_docs')}}
+              "adjustedProfit": {
+              "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of adjusted net profit.",
+              "type": "number",
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 1000.45
+              },
+              "adjustedLoss": {
+              "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of adjusted net loss.",
+              "type": "number",
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 1000.45
+              },
+              "foreignTaxPaid": {
+              "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of foreign tax paid.",
+              "type": "number",
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 1000.45
+              },
+              {{/if}}
               "taxableProfit": {
                 "description": "Amount of taxable net profit. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
                 "type": "number",
@@ -1954,6 +2084,32 @@
                       },
                       "additionalProperties": false
                     },
+                    {{#if (enabled 'r23_cl531_docs')}}
+                    "adjustedProfit": {
+                    "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of adjusted net profit.",
+                    "type": "number",
+                    "multipleOf": 0.01,
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": 1000.45
+                    },
+                    "adjustedLoss": {
+                    "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of adjusted net loss.",
+                    "type": "number",
+                    "multipleOf": 0.01,
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": 1000.45
+                    },
+                    "foreignTaxPaid": {
+                    "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of foreign tax paid.",
+                    "type": "number",
+                    "multipleOf": 0.01,
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": 1000.45
+                    },
+                    {{/if}}
                     "taxableProfit": {
                       "description": "Amount of taxable net profit. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
                       "type": "number",

@@ -47,6 +47,11 @@
     "deductions": {
       "propertyAllowance": 0.25
     },
+    {{#if (enabled 'r23_cl531_docs')}}
+    "adjustedLoss": 0.12,
+    "adjustedProfit": 0.12,
+    "foreignTaxPaid": 0.12,
+    {{/if}}
     "taxableProfit": 2500,
     "countryLevelDetail": [
       {
@@ -77,6 +82,11 @@
         "deductions": {
           "propertyAllowance": 0.25
         },
+        {{#if (enabled 'r23_cl531_docs')}}
+        "adjustedLoss": 0.12,
+        "adjustedProfit": 0.12,
+        "foreignTaxPaid": 0.12,
+        {{/if}}
         "taxableProfit": 0.12,
         "propertyLevelDetail": [
           {
@@ -108,6 +118,11 @@
             "deductions": {
               "propertyAllowance": 0.25
             },
+            {{#if (enabled 'r23_cl531_docs')}}
+            "adjustedLoss": 0.12,
+            "adjustedProfit": 0.12,
+            "foreignTaxPaid": 0.12,
+            {{/if}}
             "taxableProfit": 1.12,
             "adjustedIncomeTaxLoss": 1.13
           }
@@ -163,6 +178,11 @@
     "deductions": {
       "propertyAllowance": 0.25
     },
+    {{#if (enabled 'r23_cl531_docs')}}
+    "adjustedLoss": 0.12,
+    "adjustedProfit": 0.12,
+    "foreignTaxPaid": 0.12,
+    {{/if}}
     "taxableProfit": 2500,
     "countryLevelDetail": [
       {
@@ -193,6 +213,11 @@
         "deductions": {
           "propertyAllowance": 0.25
         },
+        {{#if (enabled 'r23_cl531_docs')}}
+        "adjustedLoss": 0.12,
+        "adjustedProfit": 0.12,
+        "foreignTaxPaid": 0.12,
+        {{/if}}
         "taxableProfit": 0.12,
         "propertyLevelDetail": [
           {
@@ -224,6 +249,11 @@
             "deductions": {
               "propertyAllowance": 0.25
             },
+            {{#if (enabled 'r23_cl531_docs')}}
+            "adjustedLoss": 0.12,
+            "adjustedProfit": 0.12,
+            "foreignTaxPaid": 0.12,
+            {{/if}}
             "taxableProfit": 1.12,
             "adjustedIncomeTaxLoss": 1.13
           }
