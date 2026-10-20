@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,9 @@ package v7.selfEmploymentBsas.submit.def1
 
 import api.controllers.validators.RulesValidator
 import api.controllers.validators.resolvers.ResolveParsedNumber
-import api.models.errors.MtdError
+import api.models.errors.*
 import cats.data.Validated
 import cats.data.Validated.Invalid
-import common.errors.RuleBothExpensesError
 import v7.selfEmploymentBsas.submit.def1.model.request.{Additions, Def1_SubmitSelfEmploymentBsasRequestData, Expenses, Income}
 
 object Def1_SubmitSelfEmploymentBsasRulesValidator extends RulesValidator[Def1_SubmitSelfEmploymentBsasRequestData] {

@@ -19,7 +19,6 @@ package v7.foreignPropertyBsas.retrieve.def1
 import api.models.errors.*
 import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import api.support.IntegrationBaseSpec
-import common.errors.RuleTypeOfBusinessIncorrectError
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status.*
 import play.api.libs.json.{JsValue, Json}

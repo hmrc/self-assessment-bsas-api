@@ -20,7 +20,6 @@ import api.models.errors.*
 import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import api.support.IntegrationBaseSpec
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import common.errors.TypeOfBusinessFormatError
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status.*
 import play.api.libs.json.Json
@@ -138,7 +137,7 @@ class Def2_ListBsasHipIspec extends IntegrationBaseSpec with Def2_ListBsasFixtur
         (BAD_REQUEST, "INVALID_REQUEST", INTERNAL_SERVER_ERROR, InternalError)
       )
 
-      (errors).foreach(serviceErrorTest.tupled)
+      errors.foreach(serviceErrorTest.tupled)
     }
   }
 

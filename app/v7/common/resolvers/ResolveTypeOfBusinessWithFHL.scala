@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,9 @@
 package v7.common.resolvers
 
 import api.controllers.validators.resolvers.ResolverSupport
-import api.models.errors.MtdError
+import api.models.errors.*
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
-import common.errors.TypeOfBusinessFormatError
 import v7.common.model.TypeOfBusinessWithFHL
 
 import scala.util.{Failure, Success, Try}

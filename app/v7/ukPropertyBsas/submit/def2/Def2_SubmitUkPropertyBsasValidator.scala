@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,9 @@ package v7.ukPropertyBsas.submit.def2
 
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers.*
-import api.models.errors.MtdError
+import api.models.errors.*
 import cats.data.Validated
 import cats.implicits.*
-import common.errors.RuleBothPropertiesSuppliedError
 import play.api.libs.json.JsValue
 import v7.ukPropertyBsas.submit.def2.model.request.{Def2_SubmitUkPropertyBsasRequestBody, Def2_SubmitUkPropertyBsasRequestData}
 import v7.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData

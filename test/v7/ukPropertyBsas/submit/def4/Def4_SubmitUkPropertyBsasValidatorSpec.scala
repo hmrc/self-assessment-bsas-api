@@ -20,7 +20,6 @@ import api.models.domain.{CalculationId, Nino, TaxYear}
 import api.models.errors.*
 import api.models.utils.JsonErrorValidators
 import api.utils.UnitSpec
-import common.errors.{RuleBothAdjustmentsSuppliedError, RuleBothExpensesError, RuleZeroAdjustmentsInvalidError}
 import org.scalatest.Assertion
 import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json.{JsNumber, JsValue, Json}

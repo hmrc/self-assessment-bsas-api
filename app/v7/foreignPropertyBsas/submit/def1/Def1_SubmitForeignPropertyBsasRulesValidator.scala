@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,10 @@ package v7.foreignPropertyBsas.submit.def1
 
 import api.controllers.validators.RulesValidator
 import api.controllers.validators.resolvers.{ResolveParsedCountryCode, ResolveParsedNumber}
-import api.models.errors.MtdError
+import api.models.errors.*
 import cats.data.Validated
 import cats.data.Validated.*
 import cats.implicits.*
-import common.errors.{RuleBothExpensesError, RuleDuplicateCountryCodeError}
 import v7.foreignPropertyBsas.submit.def1.model.request.*
 
 object Def1_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def1_SubmitForeignPropertyBsasRequestData] {
