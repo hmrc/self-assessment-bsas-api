@@ -44,6 +44,11 @@
     "deductions": {
       "propertyAllowance": 0.12
     },
+    {{#if (enabled 'r23_cl531_docs')}}
+    "adjustedLoss": 0.12,
+    "adjustedProfit": 0.12,
+    "foreignTaxPaid": 0.12,
+    {{/if}}
     "taxableProfit": 12500
   },
   "adjustments": {
@@ -73,6 +78,11 @@
     "deductions": {
       "propertyAllowance": 0.12
     },
+    {{#if (enabled 'r23_cl531_docs')}}
+    "adjustedLoss": 0.12,
+    "adjustedProfit": 0.12,
+    "foreignTaxPaid": 0.12,
+    {{/if}}
     "taxableProfit": 12500
   }
 }
