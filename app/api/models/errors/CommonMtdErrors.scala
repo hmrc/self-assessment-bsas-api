@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,6 +52,8 @@ object ValueFormatError extends MtdError("FORMAT_VALUE", "The value must be betw
 
 object CalculationIdFormatError extends MtdError("FORMAT_CALCULATION_ID", "The provided calculation ID is invalid", BAD_REQUEST)
 
+object TypeOfBusinessFormatError extends MtdError("FORMAT_TYPE_OF_BUSINESS", "The provided type of business is invalid", BAD_REQUEST)
+
 //Standard Errors
 object NotFoundError extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching resource not found", NOT_FOUND)
 
@@ -69,6 +71,12 @@ object InvalidBodyTypeError extends MtdError("INVALID_BODY_TYPE", "Expecting tex
 
 object InvalidTaxYearParameterError
     extends MtdError(code = "INVALID_TAX_YEAR_PARAMETER", message = "A tax year before 2023-24 was supplied", BAD_REQUEST)
+
+object TriggerNotFoundError
+    extends MtdError(
+      "MATCHING_RESOURCE_NOT_FOUND",
+      "A matching incomeSourceId record was not found, or the incomeSourceType provided does not relate to the incomeSourceId",
+      NOT_FOUND)
 
 //Authentication/Authorisation errors
 
@@ -105,6 +113,98 @@ object RuleEndBeforeStartDateError
     extends MtdError("RULE_END_DATE_BEFORE_START_DATE", "The supplied accounting period end date is before the start date", BAD_REQUEST)
 
 object RuleCountryCodeError extends MtdError("RULE_COUNTRY_CODE", "The country code is not a permitted ISO 3166-1 alpha-3 country code", BAD_REQUEST)
+
+object RuleBothPropertiesSuppliedError
+    extends MtdError("RULE_BOTH_PROPERTIES_SUPPLIED", "Both FHL and Non-FHL properties cannot be present at the same time", BAD_REQUEST)
+
+object RuleBothExpensesError
+    extends MtdError("RULE_BOTH_EXPENSES_SUPPLIED", "Both expenses and consolidated expenses cannot be present at the same time", BAD_REQUEST)
+
+object RuleAccountingPeriodNotSupportedError
+    extends MtdError(
+      "RULE_ACCOUNTING_PERIOD_NOT_SUPPORTED",
+      "The specified accounting period is not supported, that is, the accounting period specified falls before the minimum tax year value",
+      BAD_REQUEST
+    )
+
+object RuleResultingValueNotPermitted
+    extends MtdError(
+      "RULE_RESULTING_VALUE_NOT_PERMITTED",
+      "The adjustments provided would produce an unacceptable negative monetary value",
+      BAD_REQUEST)
+
+object RuleDuplicateCountryCodeError
+    extends MtdError("RULE_DUPLICATE_COUNTRY_CODE", "The same countryCode cannot be supplied multiple times", BAD_REQUEST) {
+
+  def forDuplicatedCodesAndPaths(code: String, paths: Seq[String]): MtdError =
+    RuleDuplicateCountryCodeError.copy(message = s"The country code '$code' is supplied multiple times", paths = Some(paths))
+
+}
+
+object RuleAccountingPeriodNotEndedError
+    extends MtdError("RULE_ACCOUNTING_PERIOD_NOT_ENDED", "The supplied accounting period has not ended", BAD_REQUEST)
+
+object RuleNoAccountingPeriodError extends MtdError("RULE_NO_ACCOUNTING_PERIOD", "The supplied accounting period does not exist", BAD_REQUEST)
+
+object RuleTypeOfBusinessIncorrectError
+    extends MtdError("RULE_TYPE_OF_BUSINESS_INCORRECT", "The calculation ID supplied relates to a different type of business", BAD_REQUEST)
+
+object RuleOutsideAmendmentWindowError extends MtdError("RULE_OUTSIDE_AMENDMENT_WINDOW", "You are outside the amendment window", BAD_REQUEST)
+
+object RuleSummaryStatusInvalid extends MtdError("RULE_SUMMARY_STATUS_INVALID", "Periodic data has changed. Request a new summary", BAD_REQUEST)
+
+object RuleSummaryStatusSuperseded
+    extends MtdError("RULE_SUMMARY_STATUS_SUPERSEDED", "A newer summary calculation exists for this accounting period", BAD_REQUEST)
+
+object RuleAlreadyAdjusted extends MtdError("RULE_ALREADY_ADJUSTED", "A summary may only be adjusted once. Request a new summary", BAD_REQUEST)
+
+object RuleOverConsolidatedExpensesThreshold
+    extends MtdError(
+      "RULE_OVER_CONSOLIDATED_EXPENSES_THRESHOLD",
+      "The cumulative turnover amount exceeds the consolidated expenses threshold",
+      BAD_REQUEST)
+
+object RuleTradingIncomeAllowanceClaimed
+    extends MtdError("RULE_TRADING_INCOME_ALLOWANCE_CLAIMED", "A claim for trading income allowance was made. Cannot also have expenses", BAD_REQUEST)
+
+object RulePropertyIncomeAllowanceClaimed
+    extends MtdError(
+      "RULE_PROPERTY_INCOME_ALLOWANCE_CLAIMED",
+      "A claim for property income allowance was made. Cannot also have expenses",
+      BAD_REQUEST)
+
+object RuleObligationsNotMet extends MtdError("RULE_OBLIGATIONS_NOT_MET", "The obligations for the business have not been met", BAD_REQUEST)
+
+object RuleBothAdjustmentsSuppliedError
+    extends MtdError("RULE_BOTH_ADJUSTMENTS_SUPPLIED", "Both adjustments and zero adjustments must not be present at the same time", BAD_REQUEST)
+
+object RuleZeroAdjustmentsInvalidError extends MtdError("RULE_ZERO_ADJUSTMENTS_INVALID", "Zero adjustments can only be set to true", BAD_REQUEST)
+
+object RuleDuplicatePropertyIdError
+    extends MtdError("RULE_DUPLICATE_PROPERTY_ID", "You cannot supply the same property ID for multiple properties", BAD_REQUEST) {
+
+  def forDuplicatedIdsAndPaths(id: String, paths: Seq[String]): MtdError = copy(
+    message = s"The property ID '$id' is duplicated for multiple properties",
+    paths = Some(paths)
+  )
+
+}
+
+object RuleResidentialFinancialCostNotAllowedError
+    extends MtdError(
+      "RULE_RESIDENTIAL_FINANCIAL_COST_NOT_ALLOWED",
+      "The residentialFinancialCost field is not applicable for this tax year",
+      BAD_REQUEST)
+
+object RulePropertyIdMismatchError
+    extends MtdError("RULE_PROPERTY_ID_MISMATCH", "The supplied property ID is not valid for this income source", BAD_REQUEST)
+
+object RuleAccountingPeriodNotAlignedError
+    extends MtdError(
+      "RULE_ACCOUNTING_PERIOD_NOT_ALIGNED",
+      "The accounting period must be a complete tax year (6 April to 5 April of the following year)",
+      BAD_REQUEST
+    )
 
 //Stub Errors
 object RuleIncorrectGovTestScenarioError

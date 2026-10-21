@@ -19,11 +19,10 @@ package v7.bsas.trigger.def2
 import api.controllers.validators.RulesValidator
 import api.controllers.validators.resolvers.{ResolveBusinessId, ResolveDateRange}
 import api.models.domain.TaxYear
-import api.models.errors.MtdError
+import api.models.errors.*
 import cats.data.Validated
 import cats.data.Validated.{Invalid, cond}
 import cats.implicits.*
-import common.errors.{RuleAccountingPeriodNotAlignedError, RuleAccountingPeriodNotSupportedError}
 import config.BsasConfig
 import v7.bsas.trigger.def2.model.request.Def2_TriggerBsasRequestData
 import v7.common.model.TypeOfBusiness

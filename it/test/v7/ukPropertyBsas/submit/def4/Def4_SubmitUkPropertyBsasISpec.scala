@@ -20,7 +20,6 @@ import api.models.errors.*
 import api.models.utils.JsonErrorValidators
 import api.services.*
 import api.support.IntegrationBaseSpec
-import common.errors.*
 import play.api.libs.json.*
 import play.api.libs.ws.WSBodyWritables.writeableOf_JsValue
 import play.api.libs.ws.{WSRequest, WSResponse}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import api.models.domain.{CalculationId, Nino, TaxYear}
 import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
-import common.errors.*
 import uk.gov.hmrc.http.HeaderCarrier
 import v7.foreignPropertyBsas.retrieve.def1.model.request.Def1_RetrieveForeignPropertyBsasRequestData
 import v7.foreignPropertyBsas.retrieve.def2.model.request.Def2_RetrieveForeignPropertyBsasRequestData
@@ -62,7 +61,7 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec {
       "downstream returns a success response with invalid type of business" should {
         List("01", "02", "04").foreach(incomeSourceType =>
           s"return an error for $incomeSourceType" in new Test {
-            val response: RetrieveForeignPropertyBsasResponse = parsedRetrieveForeignPropertyBsasResponseWith(incomeSourceType.toString)
+            val response: RetrieveForeignPropertyBsasResponse = parsedRetrieveForeignPropertyBsasResponseWith(incomeSourceType)
 
             MockRetrieveForeignPropertyBsasConnector
               .retrieveForeignPropertyBsas(request)

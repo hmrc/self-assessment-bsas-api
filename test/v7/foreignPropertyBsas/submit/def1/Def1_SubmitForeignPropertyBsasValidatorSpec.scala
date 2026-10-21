@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import api.models.domain.{CalculationId, Nino, TaxYear}
 import api.models.errors.*
 import api.models.utils.JsonErrorValidators
 import api.utils.UnitSpec
-import common.errors.{RuleBothExpensesError, RuleBothPropertiesSuppliedError, RuleDuplicateCountryCodeError}
 import play.api.libs.json.*
 import v7.foreignPropertyBsas.submit.def1.model.request.{Def1_SubmitForeignPropertyBsasRequestBody, Def1_SubmitForeignPropertyBsasRequestData}
 
@@ -366,7 +365,7 @@ class Def1_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
             (
               (v: JsNumber) => BodyWith(entry.update("/expenses/residentialFinancialCost", v)),
               "/foreignProperty/0/expenses/residentialFinancialCost")).foreach { case (body, path) =>
-            testWith(body, path, min = "-99999999999.99")
+            testWith(body, path)
           }
         }
 

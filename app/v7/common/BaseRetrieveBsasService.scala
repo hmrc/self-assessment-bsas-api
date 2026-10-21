@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,9 @@
 package v7.common
 
 import api.models.domain.TaxYear
-import api.models.errors.{ErrorWrapper, NotFoundError}
+import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.services.{BaseService, ServiceOutcome}
-import common.errors.*
 import v7.common.model.{HasIncomeSourceType, HasTaxYear}
 
 trait BaseRetrieveBsasService extends BaseService {
