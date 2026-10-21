@@ -253,6 +253,13 @@ components:
         code: RULE_INCORRECT_GOV_TEST_SCENARIO
         message: The supplied Gov-Test-Scenario is not valid
 
+    ruleResidentialFinancialCostNotAllowed:
+        description: |
+          Following changes to the tax treatment of residential finance costs from the 2020–21 tax year, the residentialFinancialCost field is not applicable for BSAS submissions for tax years 2026–27 and later.
+        value:
+            code: RULE_RESIDENTIAL_FINANCIAL_COST_NOT_ALLOWED
+            message: The residentialFinancialCost field is not applicable for this tax year
+
     # 403
     clientOrAgentNotAuthorised:
       description: |
