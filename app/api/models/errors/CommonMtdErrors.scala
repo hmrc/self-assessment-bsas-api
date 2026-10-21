@@ -190,6 +190,12 @@ object RuleDuplicatePropertyIdError
 
 }
 
+object RuleResidentialFinancialCostNotAllowedError
+    extends MtdError(
+      "RULE_RESIDENTIAL_FINANCIAL_COST_NOT_ALLOWED",
+      "The residentialFinancialCost field is not applicable for this tax year",
+      BAD_REQUEST)
+
 object RulePropertyIdMismatchError
     extends MtdError("RULE_PROPERTY_ID_MISMATCH", "The supplied property ID is not valid for this income source", BAD_REQUEST)
 
