@@ -28,7 +28,7 @@ class ForeignPropertyExpensesSpec extends UnitSpec {
     professionalFees = Some(4.12),
     travelCosts = Some(5.12),
     costOfServices = Some(6.12),
-    residentialFinancialCost = Some(7.12),
+    residentialFinancialCost = None,
     other = Some(8.12),
     consolidatedExpenses = Some(9.12)
   )
@@ -47,7 +47,6 @@ class ForeignPropertyExpensesSpec extends UnitSpec {
             |  "professionalFees": 4.12,
             |  "travelCosts": 5.12,
             |  "costOfServices": 6.12,
-            |  "residentialFinancialCost": 7.12,
             |  "other": 8.12,
             |  "consolidatedExpenses": 9.12
             |}
@@ -74,7 +73,6 @@ class ForeignPropertyExpensesSpec extends UnitSpec {
             |  "professionalFees": 4.12,
             |  "travelCosts": 5.12,
             |  "costOfServices": 6.12,
-            |  "residentialFinancialCost": 7.12,
             |  "other": 8.12,
             |  "consolidatedExpenses": 9.12
             |}

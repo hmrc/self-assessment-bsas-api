@@ -20,7 +20,12 @@ import api.models.domain.{CalculationId, Nino, TaxYear}
 import api.models.errors.*
 import api.models.utils.JsonErrorValidators
 import api.utils.UnitSpec
-import common.errors.{RuleBothAdjustmentsSuppliedError, RuleBothExpensesError, RuleZeroAdjustmentsInvalidError}
+import common.errors.{
+  RuleBothAdjustmentsSuppliedError,
+  RuleBothExpensesError,
+  RuleResidentialFinancialCostNotAllowedError,
+  RuleZeroAdjustmentsInvalidError
+}
 import org.scalatest.Assertion
 import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json.{JsNumber, JsValue, Json}
@@ -60,26 +65,6 @@ class Def4_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
        |""".stripMargin
     )
 
-  private val consolidatedAndResidentialBodyJson =
-    Json.parse(
-      s"""
-         |{
-         |"ukProperty": {
-         |  "income": {
-         |     "totalRentsReceived": 1000.45,
-         |     "premiumsOfLeaseGrant": 1000.45,
-         |     "reversePremiums": 1000.45,
-         |     "otherPropertyIncome": 1000.45
-         |  },
-         |  "expenses": {
-         |     "consolidatedExpenses": 1000.45,
-         |     "residentialFinancialCost": 130.32
-         |    }
-         |  }
-         |}
-         |""".stripMargin
-    )
-
   private val invalidUkPropertyConsolidatedBodyJson =
     Json.parse(
       """
@@ -96,8 +81,7 @@ class Def4_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         |}""".stripMargin
     )
 
-  private val parsedConsolidatedBody               = consolidatedBodyJson.as[Def4_SubmitUkPropertyBsasRequestBody]
-  private val parsedConsolidatedAndResidentialBody = consolidatedAndResidentialBodyJson.as[Def4_SubmitUkPropertyBsasRequestBody]
+  private val parsedConsolidatedBody = consolidatedBodyJson.as[Def4_SubmitUkPropertyBsasRequestBody]
 
   private val parsedWithOnlyZeroAdjustmentsBody: Def4_SubmitUkPropertyBsasRequestBody =
     mtdRequestWithOnlyZeroAdjustments(true).as[Def4_SubmitUkPropertyBsasRequestBody]
@@ -121,15 +105,6 @@ class Def4_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
 
         result shouldBe Right(
           Def4_SubmitUkPropertyBsasRequestData(parsedNino, parsedCalculationId, parsedTaxYear, parsedConsolidatedBody)
-        )
-      }
-
-      "a valid request containing residentialFinancialCost and consolidated expenses is supplied" in {
-
-        val result = validator(validNino, validCalculationId, validTaxYear, consolidatedAndResidentialBodyJson).validateAndWrapResult()
-
-        result shouldBe Right(
-          Def4_SubmitUkPropertyBsasRequestData(parsedNino, parsedCalculationId, parsedTaxYear, parsedConsolidatedAndResidentialBody)
         )
       }
 
@@ -264,7 +239,6 @@ class Def4_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
           "/ukProperty/expenses/professionalFees",
           "/ukProperty/expenses/costOfServices",
           "/ukProperty/expenses/travelCosts",
-          "/ukProperty/expenses/residentialFinancialCost",
           "/ukProperty/expenses/other"
         ).foreach(path => testWith(fullRequestJson.update(path, _), path))
       }
@@ -351,6 +325,20 @@ class Def4_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
 
         result shouldBe Left(
           ErrorWrapper(correlationId, RuleBothAdjustmentsSuppliedError.withPath("/ukProperty"))
+        )
+      }
+    }
+
+    "return RuleResidentialFinancialCostNotAllowedError" when {
+      "passed residentialFinancialCost field in expenses" in {
+        val body   = fullRequestJson.update("/ukProperty/expenses/residentialFinancialCost", JsNumber(123.45))
+        val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(
+            correlationId,
+            RuleResidentialFinancialCostNotAllowedError.withPath("/ukProperty/expenses/residentialFinancialCost")
+          )
         )
       }
     }

@@ -53,7 +53,6 @@ class Def4_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
         |        "financialCosts": 5000.45,
         |        "professionalFees": 300.99,
         |        "costOfServices": 500.00,
-        |        "residentialFinancialCost": 9000.00,
         |        "other": 1000.00,
         |        "travelCosts": 99.99
         |    }
@@ -261,10 +260,7 @@ class Def4_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
           ((v: JsNumber) => foreignPropertyBodyWith(entry.update("/expenses/other", v)), "/foreignProperty/propertyLevelDetail/0/expenses/other"),
           (
             (v: JsNumber) => foreignPropertyBodyWith(entry.update("/expenses/travelCosts", v)),
-            "/foreignProperty/propertyLevelDetail/0/expenses/travelCosts"),
-          (
-            (v: JsNumber) => foreignPropertyBodyWith(entry.update("/expenses/residentialFinancialCost", v)),
-            "/foreignProperty/propertyLevelDetail/0/expenses/residentialFinancialCost")
+            "/foreignProperty/propertyLevelDetail/0/expenses/travelCosts")
         ).foreach { case (body, path) => testWith(body, path) }
 
       }
@@ -336,6 +332,23 @@ class Def4_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
             RuleBothExpensesError.withPaths(
               List("/foreignProperty/propertyLevelDetail/0/expenses", "/foreignProperty/propertyLevelDetail/1/expenses")
             )
+          )
+        )
+      }
+    }
+
+    "return RuleResidentialFinancialCostNotAllowedError" when {
+      "passed residentialFinancialCost field in expenses" in {
+        val body = foreignPropertyBodyWith(
+          entry
+            .update("expenses/residentialFinancialCost", JsNumber(123.45))
+        )
+        val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(
+            correlationId,
+            RuleResidentialFinancialCostNotAllowedError.withPath("/foreignProperty/propertyLevelDetail/0/expenses/residentialFinancialCost")
           )
         )
       }

@@ -93,6 +93,12 @@ object RuleObligationsNotMet extends MtdError("RULE_OBLIGATIONS_NOT_MET", "The o
 object RuleBothAdjustmentsSuppliedError
     extends MtdError("RULE_BOTH_ADJUSTMENTS_SUPPLIED", "Both adjustments and zero adjustments must not be present at the same time", BAD_REQUEST)
 
+object RuleResidentialFinancialCostNotAllowedError
+    extends MtdError(
+      "RULE_RESIDENTIAL_FINANCIAL_COST_NOT_ALLOWED",
+      "The residentialFinancialCost field is not applicable for this tax year",
+      BAD_REQUEST)
+
 object RuleZeroAdjustmentsInvalidError extends MtdError("RULE_ZERO_ADJUSTMENTS_INVALID", "Zero adjustments can only be set to true", BAD_REQUEST)
 
 object RuleDuplicatePropertyIdError

@@ -30,8 +30,7 @@ class ExpensesSpec extends UnitSpec {
       |  "professionalFees": 4.12,
       |  "costOfServices": 6.12,
       |  "travelCosts": 5.12,
-      |  "other": 7.12,
-      |  "residentialFinancialCost": 8.12
+      |  "other": 7.12
       |}
       |""".stripMargin)
 
@@ -43,7 +42,7 @@ class ExpensesSpec extends UnitSpec {
     travelCosts = Some(5.12),
     costOfServices = Some(6.12),
     other = Some(7.12),
-    residentialFinancialCost = Some(8.12),
+    residentialFinancialCost = None,
     consolidatedExpenses = None
   )
 
