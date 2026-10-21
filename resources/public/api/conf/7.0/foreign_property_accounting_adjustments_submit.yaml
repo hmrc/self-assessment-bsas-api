@@ -179,6 +179,8 @@ post:
               $ref: ./common/errors.yaml#/components/examples/ruleDuplicatePropertyId
             RULE_PROPERTY_ID_MISMATCH:
               $ref: ./common/errors.yaml#/components/examples/rulePropertyIdMismatch
+            RULE_RESIDENTIAL_FINANCIAL_COST_NOT_ALLOWED:
+              $ref: ./common/errors.yaml#/components/examples/ruleResidentialFinancialCostNotAllowed
 
     403:
       description: Forbidden

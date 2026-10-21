@@ -18,7 +18,7 @@ package v7.ukPropertyBsas.submit.def4
 
 import api.controllers.validators.RulesValidator
 import api.controllers.validators.resolvers.ResolveParsedNumber
-import api.models.errors.*
+import api.models.errors.MtdError
 import cats.data.Validated
 import cats.data.Validated.Invalid
 import v7.ukPropertyBsas.submit.def4.model.request.{Def4_SubmitUkPropertyBsasRequestData, Expenses, UkProperty}
@@ -29,6 +29,8 @@ object Def4_SubmitUkPropertyBsasRulesValidator extends RulesValidator[Def4_Submi
     import parsed.body
 
     val validatedZeroAdjustments = validateZeroAdjustments(body.ukProperty)
+
+    val validatedResidentialFinancialCost = validateResidentialFinancialCost(body.ukProperty)
 
     val (validatedExpenses, validatedConsolidatedExpenses) = body.ukProperty match {
       case Some(ukProperty) =>
@@ -47,11 +49,28 @@ object Def4_SubmitUkPropertyBsasRulesValidator extends RulesValidator[Def4_Submi
 
     combine(
       validatedZeroAdjustments,
+      validatedResidentialFinancialCost,
       validatedExpenses,
       validatedConsolidatedExpenses,
       validatedIncome
     ).onSuccess(parsed)
 
+  }
+
+  private def validateResidentialFinancialCost(ukProperty: Option[UkProperty]): Validated[Seq[MtdError], Unit] = {
+
+    val residentialFinancialCost: Boolean = ukProperty.exists(prop => prop.expenses.flatMap(_.residentialFinancialCost).isDefined)
+
+    if (residentialFinancialCost) {
+      Invalid(
+        List(
+          RuleResidentialFinancialCostNotAllowedError
+            .withPath("/ukProperty/expenses/residentialFinancialCost")
+        )
+      )
+    } else {
+      valid
+    }
   }
 
   private def validateZeroAdjustments(ukProperty: Option[UkProperty]): Validated[Seq[MtdError], Unit] = {

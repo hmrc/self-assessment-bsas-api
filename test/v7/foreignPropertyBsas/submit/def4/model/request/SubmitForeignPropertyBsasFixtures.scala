@@ -40,7 +40,6 @@ object SubmitForeignPropertyBsasFixtures {
       |                    "financialCosts": 7.12,
       |                    "professionalFees": 8.12,
       |                    "costOfServices": 9.12,
-      |                    "residentialFinancialCost": 10.12,
       |                    "other": 11.12,
       |                    "travelCosts": 12.12
       |                }
@@ -69,7 +68,6 @@ object SubmitForeignPropertyBsasFixtures {
       |                    "financialCosts": 7.12,
       |                    "professionalFees": 8.12,
       |                    "costOfServices": 9.12,
-      |                    "residentialFinancialCost": 10.12,
       |                    "other": 11.12,
       |                    "travelCosts": 12.12
       |                }
@@ -99,7 +97,6 @@ object SubmitForeignPropertyBsasFixtures {
       |                "financialCosts": 7.12,
       |                "professionalFees": 8.12,
       |                "costOfServices": 9.12,
-      |                "residentialFinancialCost": 10.12,
       |                "other": 11.12,
       |                "travelCosts": 12.12
       |            }
@@ -131,7 +128,7 @@ object SubmitForeignPropertyBsasFixtures {
                   financialCosts = Some(7.12),
                   professionalFees = Some(8.12),
                   costOfServices = Some(9.12),
-                  residentialFinancialCost = Some(10.12),
+                  residentialFinancialCost = None,
                   other = Some(11.12),
                   travelCosts = Some(12.12)
                 )
@@ -163,7 +160,6 @@ object SubmitForeignPropertyBsasFixtures {
       |                "professionalFees": 8.12,
       |                "travelCosts": 12.12,
       |                "costOfServices": 9.12,
-      |                "residentialFinancialCost": 10.12,
       |                "other": 11.12
       |            }
       |        }

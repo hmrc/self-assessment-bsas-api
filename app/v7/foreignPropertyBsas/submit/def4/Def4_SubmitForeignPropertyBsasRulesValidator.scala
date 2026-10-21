@@ -113,10 +113,16 @@ object Def4_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def4_
       resolveMaybeNegativeNumber(path("expenses/professionalFees"), propertyLevelDetail.expenses.flatMap(_.professionalFees)),
       resolveMaybeNegativeNumber(path("expenses/travelCosts"), propertyLevelDetail.expenses.flatMap(_.travelCosts)),
       resolveMaybeNegativeNumber(path("expenses/costOfServices"), propertyLevelDetail.expenses.flatMap(_.costOfServices)),
-      resolveMaybeNegativeNumber(path("expenses/residentialFinancialCost"), propertyLevelDetail.expenses.flatMap(_.residentialFinancialCost)),
       resolveMaybeNegativeNumber(path("expenses/other"), propertyLevelDetail.expenses.flatMap(_.other)),
-      resolveMaybeNegativeNumber(path("expenses/consolidatedExpenses"), propertyLevelDetail.expenses.flatMap(_.consolidatedExpenses))
+      resolveMaybeNegativeNumber(path("expenses/consolidatedExpenses"), propertyLevelDetail.expenses.flatMap(_.consolidatedExpenses)),
+      validateResidentialFinancialCost(path("expenses/residentialFinancialCost"), propertyLevelDetail.expenses.flatMap(_.residentialFinancialCost))
     )
+  }
+
+  private def validateResidentialFinancialCost(path: String, value: Option[BigDecimal]): Validated[Seq[MtdError], Unit] = {
+    if (value.isDefined)
+      Invalid(List(RuleResidentialFinancialCostNotAllowedError.withPath(path)))
+    else valid
   }
 
   private def validatePropertyLevelDetailConsolidatedExpenses(propertyLevelDetail: PropertyLevelDetail, index: Int): Validated[Seq[MtdError], Unit] =
