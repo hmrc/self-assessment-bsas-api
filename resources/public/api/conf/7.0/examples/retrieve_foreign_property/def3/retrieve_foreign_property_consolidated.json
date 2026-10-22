@@ -41,6 +41,11 @@
       "otherCapitalAllowance": 0.12,
       "zeroEmissionsCarAllowance": 0.12
     },
+    {{#if (enabled 'r23_cl531_docs')}}
+    "adjustedLoss": 0.12,
+    "adjustedProfit": 0.12,
+    "foreignTaxPaid": 0.12,
+    {{/if}}
     "taxableProfit": 12500
   },
   "adjustments": {
@@ -54,8 +59,9 @@
           "consolidatedExpenses": 0.12
         }
       }
-    ],
-    "adjustedSummaryCalculation": {
+     ]
+  },
+  "adjustedSummaryCalculation": {
       "totalIncome": 0.12,
       "income": {
         "totalRentsReceived": 0.12
@@ -76,7 +82,11 @@
         "otherCapitalAllowance": 0.12,
         "zeroEmissionsCarAllowance": 0.12
       },
+      {{#if (enabled 'r23_cl531_docs')}}
+      "adjustedLoss": 0.12,
+      "adjustedProfit": 0.12,
+      "foreignTaxPaid": 0.12,
+      {{/if}}
       "taxableProfit": 2500
     }
   }
-}
