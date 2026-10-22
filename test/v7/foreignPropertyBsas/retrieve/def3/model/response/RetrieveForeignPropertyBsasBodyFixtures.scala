@@ -108,8 +108,11 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |  "additions": $summaryCalculationAdditionsDesJson,
        |  "totalDeductions": 0.06,
        |  "deductions": $summaryCalculationDeductionsDesJson,
-       |  "taxableProfit": 1.12,
-       |  "adjustedIncomeTaxLoss": 1.13,
+       |  "adjustedProfit": 1.12,
+       |  "adjustedLoss": 1.13,
+       |  "foreignTaxPaid": 1.14,
+       |  "taxableProfit": 1.15,
+       |  "adjustedIncomeTaxLoss": 1.16,
        |  "propertyLevelDetail": [$summaryCalculationPropertyLevelDetailHipJson]
        |}""".stripMargin
   )
@@ -127,8 +130,11 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |  "additions": $summaryCalculationAdditionsDesJson,
        |  "totalDeductions": 0.06,
        |  "deductions": $summaryCalculationDeductionsDesJson,
-       |  "taxableProfit": 1.12,
-       |  "adjustedIncomeTaxLoss": 1.13
+       |  "adjustedProfit": 1.12,
+       |  "adjustedLoss": 1.13,
+       |  "foreignTaxPaid": 1.14,
+       |  "taxableProfit": 1.15,
+       |  "adjustedIncomeTaxLoss": 1.16
        |}""".stripMargin
   )
 
@@ -144,8 +150,11 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |  "additions": $summaryCalculationAdditionsDesJson,
        |  "totalDeductions": 0.21,
        |  "deductions": $summaryCalculationDeductionsDesJson,
-       |  "taxableProfit": 0.30,
-       |  "adjustedIncomeTaxLoss": 0.31,
+       |  "adjustedProfit": 0.30,
+       |  "adjustedLoss": 0.31,
+       |  "foreignTaxPaid": 0.32,
+       |  "taxableProfit": 0.33,
+       |  "adjustedIncomeTaxLoss": 0.34,
        |  "countryLevelDetail": [$summaryCalculationCountryLevelDetailDesJson]
        |}""".stripMargin
   )
@@ -293,8 +302,11 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |  "additions": $summaryCalculationAdditionsMtdJson,
        |  "totalDeductions": 0.06,
        |  "deductions": $summaryCalculationDeductionsMtdJson,
-       |  "taxableProfit": 1.12,
-       |  "adjustedIncomeTaxLoss": 1.13,
+       |  "adjustedProfit": 1.12,
+       |  "adjustedLoss": 1.13,
+       |  "foreignTaxPaid": 1.14,
+       |  "taxableProfit": 1.15,
+       |  "adjustedIncomeTaxLoss": 1.16,
        |  "propertyLevelDetail": [$summaryCalculationPropertyLevelDetailMtdJson]
        |}""".stripMargin
   )
@@ -312,8 +324,11 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        | "additions": $summaryCalculationAdditionsMtdJson,
        | "totalDeductions": 0.06,
        | "deductions":$summaryCalculationDeductionsMtdJson,
-       | "taxableProfit": 1.12,
-       | "adjustedIncomeTaxLoss": 1.13
+       | "adjustedProfit": 1.12,
+       | "adjustedLoss": 1.13,
+       | "foreignTaxPaid": 1.14,
+       | "taxableProfit": 1.15,
+       | "adjustedIncomeTaxLoss": 1.16
        |}
        |""".stripMargin)
 
@@ -329,8 +344,11 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |  "additions": $summaryCalculationAdditionsMtdJson,
        |  "totalDeductions": 0.21,
        |  "deductions": $summaryCalculationDeductionsMtdJson,
-       |  "taxableProfit": 0.30,
-       |  "adjustedIncomeTaxLoss": 0.31,
+       |  "adjustedProfit": 0.30,
+       |  "adjustedLoss": 0.31,
+       |  "foreignTaxPaid": 0.32,
+       |  "taxableProfit": 0.33,
+       |  "adjustedIncomeTaxLoss": 0.34,
        |  "countryLevelDetail": [$summaryCalculationCountryLevelDetailMtdJson]
        |}""".stripMargin
   )
@@ -496,8 +514,11 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     additions = Some(parsedSummaryCalculationAdditions),
     totalDeductions = Some(0.06),
     deductions = Some(parsedSummaryCalculationDeductions),
-    taxableProfit = Some(1.12),
-    adjustedIncomeTaxLoss = Some(1.13),
+    adjustedProfit = Some(1.12),
+    adjustedLoss = Some(1.13),
+    foreignTaxPaid = Some(1.14),
+    taxableProfit = Some(1.15),
+    adjustedIncomeTaxLoss = Some(1.16),
     propertyLevelDetail = Some(Seq(parsedSummaryCalculationPropertyLevelDetail))
   )
 
@@ -513,8 +534,11 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     additions = Some(parsedSummaryCalculationAdditions),
     totalDeductions = Some(0.06),
     deductions = Some(parsedSummaryCalculationDeductions),
-    taxableProfit = Some(1.12),
-    adjustedIncomeTaxLoss = Some(1.13)
+    adjustedProfit = Some(1.12),
+    adjustedLoss = Some(1.13),
+    foreignTaxPaid = Some(1.14),
+    taxableProfit = Some(1.15),
+    adjustedIncomeTaxLoss = Some(1.16)
   )
 
   lazy val parsedSummaryCalculation: SummaryCalculation = SummaryCalculation(
@@ -528,8 +552,11 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     additions = Some(parsedSummaryCalculationAdditions),
     totalDeductions = Some(0.21),
     deductions = Some(parsedSummaryCalculationDeductions),
-    taxableProfit = Some(0.30),
-    adjustedIncomeTaxLoss = Some(0.31),
+    adjustedProfit = Some(0.30),
+    adjustedLoss = Some(0.31),
+    foreignTaxPaid = Some(0.32),
+    taxableProfit = Some(0.33),
+    adjustedIncomeTaxLoss = Some(0.34),
     countryLevelDetail = Some(List(parsedSummaryCalculationCountryLevelDetail))
   )
 
