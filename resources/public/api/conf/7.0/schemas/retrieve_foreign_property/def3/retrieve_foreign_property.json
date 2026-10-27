@@ -401,7 +401,7 @@
         },
         {{#if (enabled 'r23_cl531_docs')}}
         "adjustedProfit": {
-        "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of adjusted net profit.",
+        "description": "The adjusted profit for the year for the foreign property business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
         "type": "number",
         "multipleOf": 0.01,
         "minimum": 0,
@@ -409,7 +409,7 @@
         "example": 1000.45
         },
         "adjustedLoss": {
-        "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of adjusted net loss.",
+        "description": "The adjusted loss for the year for the foreign property business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
         "type": "number",
         "multipleOf": 0.01,
         "minimum": 0,
@@ -417,7 +417,7 @@
         "example": 1000.45
         },
         "foreignTaxPaid": {
-        "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of foreign tax paid.",
+        "description": "The amount of foreign tax paid in pounds sterling for the foreign property business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
         "type": "number",
         "multipleOf": 0.01,
         "minimum": 0,
@@ -707,7 +707,7 @@
               },
               {{#if (enabled 'r23_cl531_docs')}}
               "adjustedProfit": {
-              "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of adjusted net profit.",
+              "description": "The adjusted profit for the year for the foreign property business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "multipleOf": 0.01,
               "minimum": 0,
@@ -715,7 +715,7 @@
               "example": 1000.45
               },
               "adjustedLoss": {
-              "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of adjusted net loss.",
+              "description": "The adjusted loss for the year for the foreign property business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "multipleOf": 0.01,
               "minimum": 0,
@@ -723,7 +723,7 @@
               "example": 1000.45
               },
               "foreignTaxPaid": {
-              "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of foreign tax paid.",
+              "description": "The amount of foreign tax paid in pounds sterling for the foreign property business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "multipleOf": 0.01,
               "minimum": 0,
@@ -1014,7 +1014,7 @@
                     },
                     {{#if (enabled 'r23_cl531_docs')}}
                     "adjustedProfit": {
-                    "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of adjusted net profit.",
+                    "description": "The adjusted profit for the year for the foreign property business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
                     "type": "number",
                     "multipleOf": 0.01,
                     "minimum": 0,
@@ -1022,7 +1022,7 @@
                     "example": 1000.45
                     },
                     "adjustedLoss": {
-                    "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of adjusted net loss.",
+                    "description": "The adjusted loss for the year for the foreign property business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
                     "type": "number",
                     "multipleOf": 0.01,
                     "minimum": 0,
@@ -1030,7 +1030,7 @@
                     "example": 1000.45
                     },
                     "foreignTaxPaid": {
-                    "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of foreign tax paid.",
+                    "description": "The amount of foreign tax paid in pounds sterling for the foreign property business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
                     "type": "number",
                     "multipleOf": 0.01,
                     "minimum": 0,
@@ -1474,7 +1474,7 @@
         },
         {{#if (enabled 'r23_cl531_docs')}}
         "adjustedProfit": {
-        "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of adjusted net profit.",
+        "description": "The adjusted profit for the year for the foreign property business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
         "type": "number",
         "multipleOf": 0.01,
         "minimum": 0,
@@ -1482,7 +1482,7 @@
         "example": 1000.45
         },
         "adjustedLoss": {
-        "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of adjusted net loss.",
+        "description": "The adjusted loss for the year for the foreign property business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
         "type": "number",
         "multipleOf": 0.01,
         "minimum": 0,
@@ -1490,7 +1490,7 @@
         "example": 1000.45
         },
         "foreignTaxPaid": {
-        "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of foreign tax paid.",
+        "description": "The amount of foreign tax paid in pounds sterling for the foreign property business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
         "type": "number",
         "multipleOf": 0.01,
         "minimum": 0,
@@ -1779,7 +1779,7 @@
               },
               {{#if (enabled 'r23_cl531_docs')}}
               "adjustedProfit": {
-              "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of adjusted net profit.",
+              "description": "The adjusted profit for the year for the foreign property business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "multipleOf": 0.01,
               "minimum": 0,
@@ -1787,7 +1787,7 @@
               "example": 1000.45
               },
               "adjustedLoss": {
-              "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of adjusted net loss.",
+              "description": "The adjusted loss for the year for the foreign property business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "multipleOf": 0.01,
               "minimum": 0,
@@ -1795,7 +1795,7 @@
               "example": 1000.45
               },
               "foreignTaxPaid": {
-              "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of foreign tax paid.",
+              "description": "The amount of foreign tax paid in pounds sterling for the foreign property business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "multipleOf": 0.01,
               "minimum": 0,
@@ -2086,7 +2086,7 @@
                     },
                     {{#if (enabled 'r23_cl531_docs')}}
                     "adjustedProfit": {
-                    "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of adjusted net profit.",
+                    "description": "The adjusted profit for the year for the foreign property business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
                     "type": "number",
                     "multipleOf": 0.01,
                     "minimum": 0,
@@ -2094,7 +2094,7 @@
                     "example": 1000.45
                     },
                     "adjustedLoss": {
-                    "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of adjusted net loss.",
+                    "description": "The adjusted profit for the year for the foreign property business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
                     "type": "number",
                     "multipleOf": 0.01,
                     "minimum": 0,
@@ -2102,7 +2102,7 @@
                     "example": 1000.45
                     },
                     "foreignTaxPaid": {
-                    "description": "{{#unless (enabled 'r23_cl531_docs.released-in-production')}}[ Test Only ] {{/unless}}Amount of foreign tax paid.",
+                    "description": "The amount of foreign tax paid in pounds sterling for the foreign property business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
                     "type": "number",
                     "multipleOf": 0.01,
                     "minimum": 0,
