@@ -30,6 +30,9 @@ case class SummaryCalculationPropertyLevelDetail(propertyId: String,
                                                  additions: Option[SummaryCalculationAdditions],
                                                  totalDeductions: Option[BigDecimal],
                                                  deductions: Option[SummaryCalculationDeductions],
+                                                 adjustedProfit: Option[BigDecimal],
+                                                 adjustedLoss: Option[BigDecimal],
+                                                 foreignTaxPaid: Option[BigDecimal],
                                                  taxableProfit: Option[BigDecimal],
                                                  adjustedIncomeTaxLoss: Option[BigDecimal])
 
@@ -47,6 +50,9 @@ object SummaryCalculationPropertyLevelDetail {
       (JsPath \ "additions").readNullable[SummaryCalculationAdditions] and
       (JsPath \ "totalDeductions").readNullable[BigDecimal] and
       (JsPath \ "deductions").readNullable[SummaryCalculationDeductions] and
+      (JsPath \ "adjustedProfit").readNullable[BigDecimal] and
+      (JsPath \ "adjustedLoss").readNullable[BigDecimal] and
+      (JsPath \ "foreignTaxPaid").readNullable[BigDecimal] and
       (JsPath \ "taxableProfit").readNullable[BigDecimal] and
       (JsPath \ "adjustedIncomeTaxLoss").readNullable[BigDecimal]
   )(SummaryCalculationPropertyLevelDetail.apply)
